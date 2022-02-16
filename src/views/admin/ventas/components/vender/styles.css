@@ -1,0 +1,19 @@
+#interactive.viewport {
+    width: 100%;
+  height: 400px;
+}
+
+#interactive.viewport canvas,
+video {
+  width: 100%;
+  height: 400px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#interactive.viewport canvas.drawingBuffer,
+video.drawingBuffer {
+    width: 100%;
+  height: 400px;
+}
