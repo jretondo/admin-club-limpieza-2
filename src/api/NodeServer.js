@@ -120,7 +120,8 @@ const invoicesDir = {
         last: invoices + "/last",
         afipdata: invoices + "/afipData",
         cajaList: invoices + "/cajaList",
-        cajaListPDF: invoices + "/cajaListPDF"
+        cajaListPDF: invoices + "/cajaListPDF",
+        factDataPDF: invoices + "/factDataPDF"
     }
 }
 

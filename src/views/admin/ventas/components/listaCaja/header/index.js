@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
+import { Col, Form, FormGroup, Input, Label, Row, Spinner } from 'reactstrap';
 import Button from 'reactstrap/lib/Button';
 import PtosVtas from '../../vender/header/ptosVta';
 import UsuariosList from './usersList';
@@ -22,6 +22,7 @@ const HeaderListaCaja = ({
     const [usersList, setUsersList] = useState(<option>No hay usuarios listados</option>)
     const [desde, setDesde] = useState(hoy)
     const [hasta, setHasta] = useState(hoy)
+    const [loadingPDF, setLoadingPDF] = useState(false)
 
     const getDataInvoices = async () => {
         setLoading(true)
@@ -48,7 +49,7 @@ const HeaderListaCaja = ({
 
     const printPDF = async () => {
 
-        setLoading(true)
+        setLoadingPDF(true)
         const query = `?userId=${user.id}&ptoVta=${ptosVta.id}&desde=${moment(desde).format("YYYY-MM-DD")}&hasta=${moment(hasta).format("YYYY-MM-DD")}`
         await axios.get(UrlNodeServer.invoicesDir.sub.cajaListPDF + query, {
             responseType: 'arraybuffer',
@@ -59,18 +60,17 @@ const HeaderListaCaja = ({
         })
             .then(res => {
                 let headerLine = res.headers['content-disposition'];
-                console.log('headerLine :>> ', headerLine);
                 const largo = parseInt(headerLine.length)
                 let filename = headerLine.substring(21, largo);
                 var blob = new Blob([res.data], { type: "application/pdf" });
                 FileSaver.saveAs(blob, filename);
-                setLoading(false)
+                setLoadingPDF(false)
                 swal("Listado de Caja!", "El listado de caja ha sido generado con éxito!", "success");
             })
             .catch((error) => {
-                console.log('error :>> ', error);
-                setLoading(false)
+                setLoadingPDF(false)
                 setListaCaja([])
+                swal("Listado de Caja!", "Hubo un error al querer listar la caja!", "error");
             })
     }
 
@@ -144,21 +144,28 @@ const HeaderListaCaja = ({
                             </Button>
                         </Col>
                         <Col style={{ textAlign: "center", margin: "15px" }} >
-                            <Button
-                                color="danger"
-                                style={{ height: "100px", width: "170px", fontSize: "16px" }}
-                                onClick={e => {
-                                    e.preventDefault()
-                                    printPDF()
-                                }}
-                            >
-                                <Row>
-                                    <span style={{ textAlign: "center", width: "100%" }}> Imprimir PDF</span>
-                                </Row>
-                                <Row >
-                                    <span style={{ textAlign: "center", width: "100%", fontSize: "25px" }}> <BsFileEarmarkPdfFill /></span>
-                                </Row>
-                            </Button>
+                            {
+                                loadingPDF ?
+                                    <div style={{ textAlign: "center" }}  >
+                                        <Spinner type="border" color="red" style={{ width: "5rem", height: "5rem" }} /> </div>
+                                    :
+                                    <Button
+                                        color="danger"
+                                        style={{ height: "100px", width: "170px", fontSize: "16px" }}
+                                        onClick={e => {
+                                            e.preventDefault()
+                                            printPDF()
+                                        }}
+                                    >
+                                        <Row>
+                                            <span style={{ textAlign: "center", width: "100%" }}> Imprimir PDF</span>
+                                        </Row>
+                                        <Row >
+                                            <span style={{ textAlign: "center", width: "100%", fontSize: "25px" }}> <BsFileEarmarkPdfFill /></span>
+                                        </Row>
+                                    </Button>
+                            }
+
                         </Col>
                     </Row>
                 </Col>
