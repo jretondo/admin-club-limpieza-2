@@ -37,7 +37,7 @@ const FilaVentas = ({
                     }
                 });
         }
-        console.log('query :>> ', query);
+
         if (seguir) {
             setWait(true)
             await axios.get(UrlNodeServer.invoicesDir.sub.factDataPDF + "/" + idFact + query, {
@@ -67,6 +67,50 @@ const FilaVentas = ({
                     } else {
                         swal("Reimpresión de factura", "Hubo un error al querer reimprimir la factura!", "error");
                     }
+                })
+        }
+    }
+
+    const anularFact = async (idFact) => {
+        let seguir = false
+        const data = {
+            id: idFact,
+            fecha: moment(new Date()).format("YYYY-MM-DD")
+        }
+        seguir = await swal({
+            title: "¿Está seguro de eliminar la factura?",
+            text: "Esta operación no tiene retroceso y resta del total del listado.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    return true
+                }
+            });
+
+        if (seguir) {
+            setWait(true)
+            await axios.post(UrlNodeServer.invoicesDir.sub.notaCred, data, {
+                responseType: 'arraybuffer',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('user-token'),
+                    Accept: 'application/pdf',
+                }
+            })
+                .then(res => {
+                    let headerLine = res.headers['content-disposition'];
+                    const largo = parseInt(headerLine.length)
+                    let filename = headerLine.substring(21, largo);
+                    var blob = new Blob([res.data], { type: "application/pdf" });
+                    FileSaver.saveAs(blob, filename);
+                    setWait(false)
+                    swal("Anulación de Factura", "La factura ha sido eliminada con éxito!", "success");
+                })
+                .catch(error => {
+                    setWait(false)
+                    swal("Anulación de Factura", `Hubo un error al querer anular la factura! \n\r Error: ${error}`, "error")
                 })
         }
     }
@@ -149,7 +193,10 @@ const FilaVentas = ({
                                 </DropdownItem>
                                 <DropdownItem
                                     href="#pablo"
-                                    onClick={e => e.preventDefault(e)}
+                                    onClick={e => {
+                                        e.preventDefault(e)
+                                        anularFact(item.id)
+                                    }}
                                 >
                                     <BsFillXCircleFill />
                                     Cancelar Factura
