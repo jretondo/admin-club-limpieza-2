@@ -115,9 +115,9 @@ const FilaVentas = ({
         }
     }
 
-    const completarCeros = async () => {
-        const pvStr = await CompleteCerosLeft(item.pv, 5)
-        const cbteStr = await CompleteCerosLeft(item.cbte, 8)
+    const completarCeros = () => {
+        const pvStr = CompleteCerosLeft(item.pv, 5)
+        const cbteStr = CompleteCerosLeft(item.cbte, 8)
 
         setComprobante({
             pv: pvStr,
@@ -128,7 +128,7 @@ const FilaVentas = ({
     useEffect(() => {
         completarCeros()
         // eslint-disable-next-line
-    }, [])
+    }, [item.pv, item.cbte])
 
     return (
         <tr key={id}>
@@ -138,7 +138,7 @@ const FilaVentas = ({
             <td style={{ textAlign: "center" }}>
                 {item.raz_soc_cliente === "" ? "Consumidor Final" : item.raz_soc_cliente} {parseInt(item.tipo_doc_cliente) === 80 ? "(CUIT: " + item.n_doc_cliente + ")" : parseInt(item.tipo_doc_cliente) === 96 ? "(DNI: " + item.n_doc_cliente + ")" : ""}
             </td>
-            <td>
+            <td style={{ textAlign: "center" }}>
                 {item.letra} {comprobante.pv} - {comprobante.cbte}
             </td>
             <td style={{ textAlign: "center" }}>
