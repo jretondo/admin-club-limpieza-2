@@ -13,6 +13,8 @@ import swal from 'sweetalert'
 import formatMoney from 'Function/NumberFormat'
 import ModalNewStock from './ModalNewStock'
 import ModalMoverStock from './ModalMoverStock'
+import Button from 'reactstrap/lib/Button'
+import ModalChangeCodBarras from './ModalChangeCod'
 
 const FilaProducto = ({
     id,
@@ -38,6 +40,7 @@ const FilaProducto = ({
 }) => {
     const [modal, setModal] = useState(false)
     const [modal2, setModal2] = useState(false)
+    const [modal3, setModal3] = useState(false)
 
     const EliminarOff = async (e, id, name, primero, pagina) => {
         e.preventDefault()
@@ -116,6 +119,11 @@ const FilaProducto = ({
         setModal2(true)
     }
 
+    const asignarCodModal = (e) => {
+        e.preventDefault()
+        setModal3(true)
+    }
+
     return (
         <>
             <tr key={id}>
@@ -135,7 +143,21 @@ const FilaProducto = ({
                             </a>
                             <span className="mb-0 text-sm" style={{ marginLeft: "10px" }}>
                                 <span style={{ fontSize: "17px" }}  > {item.name}</span><br />
-                                <span style={{ fontSize: "11px" }} >(Cód.: {item.cod_barra})</span>
+                                <span style={{ fontSize: "11px" }} >
+                                    <Button
+                                        color="primary"
+                                        onClick={asignarCodModal}
+                                        style={{
+                                            fontSize: "12px",
+                                            padding: "5px",
+                                            paddingTop: 0,
+                                            paddingBottom: 0,
+                                            borderRadius: "50%",
+                                            marginRight: "5px"
+                                        }}
+                                    >+</Button>
+                                    (Cód.: {item.cod_barra})
+                                </span>
                             </span>
                         </Media>
                     </Media>
@@ -234,6 +256,13 @@ const FilaProducto = ({
                 setMsgStrong={setMsgStrong}
                 setMsgGralAlert={setMsgGralAlert}
                 setSuccessAlert={setSuccessAlert}
+                setCall={setCall}
+                call={call}
+            />
+            <ModalChangeCodBarras
+                setModal={setModal3}
+                modal={modal3}
+                item={item}
                 setCall={setCall}
                 call={call}
             />

@@ -80,7 +80,8 @@ const productsDir = {
         marcas: products + "/getCat",
         proveedores: products + "/getGetSubCat",
         varCost: products + "/varCost",
-        changePorc: products + "/changePorc"
+        changePorc: products + "/changePorc",
+        codBarra: products + "/codBarra"
     }
 }
 

@@ -7,7 +7,7 @@ import { UseSecureRoutes } from "Hooks/UseSecureRoutes";
 import UrlNodeServer from '../../../api/NodeServer';
 import ListaCajaModule from './components/listaCaja';
 import ConsultaVentasModule from './components/consultas';
-import ButtonOpenCollapse from './components/buttonOpen';
+import ButtonOpenCollapse from '../../../components/buttonOpen';
 import { useWindowSize } from '../../../Hooks/UseWindowSize';
 
 const VentasModule = () => {
@@ -75,24 +75,15 @@ const VentasModule = () => {
                             </CardBody>
                         </Card>
                         <Collapse isOpen={moduleActive === 0 ? true : false} >
-                            <VenderModule
-                                active={moduleActive === 0 ? true : false}
-                                activate={activeVentas}
-                            />
+                            <VenderModule />
                         </Collapse>
 
                         <Collapse isOpen={moduleActive === 2 ? true : false} >
-                            <ListaCajaModule
-                                active={moduleActive === 2 ? true : false}
-                                activate={activeCajaLista}
-                            />
+                            <ListaCajaModule />
                         </Collapse>
 
                         <Collapse isOpen={moduleActive === 1 ? true : false} >
-                            <ConsultaVentasModule
-                                active={moduleActive === 1 ? true : false}
-                                activate={activeConsultas}
-                            />
+                            <ConsultaVentasModule />
                         </Collapse>
                     </div>
                 </Container>

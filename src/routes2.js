@@ -5,6 +5,7 @@ import Clientes from 'views/admin/clientes'
 import PuntosVenta from 'views/admin/puntoVenta'
 import Ventas from 'views/admin/ventas'
 import UserAdmin from 'views/admin/userAdmin'
+import Stock from 'views/admin/stock';
 
 var routes = [
   {
@@ -21,6 +22,13 @@ var routes = [
     component: Ventas,
     layout: process.env.PUBLIC_URL + "/admin",
     id: 3
+  }, {
+    path: "/stock",
+    name: "Stock",
+    icon: "ni ni-box-2 text-red",
+    component: Stock,
+    layout: process.env.PUBLIC_URL + "/admin",
+    id: 9
   }, {
     path: "/puntosVenta",
     name: "Puntos de Venta",
