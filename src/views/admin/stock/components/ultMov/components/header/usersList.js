@@ -79,7 +79,7 @@ const UsuariosList = ({
             <FormGroup>
                 <Input type="select" id="ptoVtaTxt" onChange={e => setUser(JSON.parse(e.target.value))} value={JSON.stringify(user)}>
                     {usersList}
-                    <option value={JSON.stringify({ id: null })} key={100} >Todos los usuarios</option>
+                    <option value={JSON.stringify({ id: "" })} key={100} >Todos los usuarios</option>
                 </Input>
             </FormGroup>
         </Col>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useActividad } from '../../../Hooks/UseNvaActividad'
 import { Redirect } from "react-router-dom"
 // reactstrap components
 import {
@@ -24,22 +23,13 @@ import ConsultaStockMod from "./components/consulta";
 const ProductsItems = () => {
     const [call, setCall] = useState(false)
 
-    const [nvaActCall, setNvaActCall] = useState(false)
-    const [actividadStr, setActividadStr] = useState("")
-
     const [moduleActive, setModuleActive] = useState(0)
     const width = useWindowSize()
-
-    useActividad(
-        nvaActCall,
-        actividadStr
-    )
 
     const { loading, error } = UseSecureRoutes(
         UrlNodeServer.routesDir.sub.stock,
         call
     )
-
 
     const activeUltStock = () => {
         setModuleActive(0)

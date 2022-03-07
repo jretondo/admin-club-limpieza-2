@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'reactstrap';
 import FilaEspera from './FilaEspera';
 
-const titulos = ["Fecha", "Producto", "Punto de Venta", "Tipo Mov.", "Marca", "Proveedor", "Cant."]
+const titulos = ["Producto", "Punto de Venta", "Marca", "Proveedor", "Cant."]
 
 const ListaStockMod = ({
     listaStock,

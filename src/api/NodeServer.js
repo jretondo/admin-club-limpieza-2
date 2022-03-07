@@ -44,7 +44,8 @@ const stockDir = {
     stock,
     sub: {
         ultMov: stock + "/ultMov",
-        moverStock: stock + "/moverStock"
+        moverStock: stock + "/moverStock",
+        ultStockList: stock + "/ultStockList"
     }
 }
 
@@ -81,7 +82,8 @@ const productsDir = {
         proveedores: products + "/getGetSubCat",
         varCost: products + "/varCost",
         changePorc: products + "/changePorc",
-        codBarra: products + "/codBarra"
+        codBarra: products + "/codBarra",
+        cost: products + "/cost"
     }
 }
 

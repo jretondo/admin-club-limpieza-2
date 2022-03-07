@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import UrlNodeServer from '../../../../api/NodeServer'
 import {
@@ -41,6 +41,9 @@ const FilaProducto = ({
     const [modal, setModal] = useState(false)
     const [modal2, setModal2] = useState(false)
     const [modal3, setModal3] = useState(false)
+
+    const [compraBool, setCompraBool] = useState(false)
+    const [newCompra, setNewCompra] = useState(item.precio_compra)
 
     const EliminarOff = async (e, id, name, primero, pagina) => {
         e.preventDefault()
@@ -124,6 +127,65 @@ const FilaProducto = ({
         setModal3(true)
     }
 
+    const actChangePrice = () => {
+        setCompraBool(true)
+        setTimeout(() => {
+            document.getElementById("inpNewCostTxt").focus()
+            document.getElementById("inpNewCostTxt").select()
+        }, 300);
+    }
+
+    const changeNewCompra = (e) => {
+        if (e.keyCode === 13) {
+            updatePriceCompra()
+        } else if (e.keyCode === 27) {
+            setCompraBool(false)
+        }
+    }
+
+    const updatePriceCompra = async () => {
+        const data = {
+            cost: newCompra
+        }
+        await axios.put(`${UrlNodeServer.productsDir.sub.cost}/${item.id_prod}`, data, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('user-token')
+            }
+        }).then(res => {
+            const respuesta = res.data
+            const status = respuesta.status
+            if (status === 200) {
+                const data = respuesta.body
+                if (data.affectedRows > 0) {
+                    swal("Actualizar Precio de Compra", "Precio modificado con éxito", "success");
+                } else {
+                    swal("Actualizar Precio de Compra", "Hubo un error inesperado!", "error");
+                }
+            } else {
+                swal("Actualizar Precio de Compra", "Hubo un error inesperado!", "error");
+            }
+        }).catch((error) => {
+            swal("Actualizar Precio de Compra", "Hubo un error inesperado! => " + error, "error");
+        }).finally(() => {
+            setTimeout(() => {
+                setCompraBool(false)
+                setCall(!call)
+            }, 1500);
+        })
+    }
+
+    useEffect(() => {
+        if (compraBool) {
+            setTimeout(() => {
+                document.getElementById("inpNewCostTxt").addEventListener("blur", () => {
+                    setCompraBool(false)
+                })
+                return () => document.getElementById("inpNewCostTxt").removeEventListener()
+            }, 300);
+        }
+
+    }, [compraBool])
+
     return (
         <>
             <tr key={id}>
@@ -168,8 +230,13 @@ const FilaProducto = ({
                 <td style={{ textAlign: "center" }}>
                     {item.subcategory}
                 </td>
-                <td style={{ textAlign: "center" }}>
-                    $ {formatMoney(item.precio_compra)}
+                <td style={{ textAlign: "center" }} onDoubleClick={() => actChangePrice()} >
+                    {
+                        compraBool ?
+                            <input id="inpNewCostTxt" value={newCompra} onChange={e => setNewCompra(e.target.value)} onKeyDown={e => changeNewCompra(e)} /> :
+                            "$" + formatMoney(item.precio_compra)
+                    }
+
                 </td>
                 <td style={{ textAlign: "center" }}>
                     $ {formatMoney((item.precio_compra * ((item.iva / 100) + 1)))}
