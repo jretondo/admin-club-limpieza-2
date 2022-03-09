@@ -157,7 +157,7 @@ const ModalNewStock = ({
                 pv_id: ptoVtaOrigen.id,
                 nvoStockSingle: (- nvoStock),
                 obs: "Mover Stock",
-                costo: 0,
+                costo: item.precio_compra,
                 iva: item.iva
             }
             const destino = {
@@ -165,7 +165,7 @@ const ModalNewStock = ({
                 pv_id: ptoVtaDestino.id,
                 nvoStockSingle: nvoStock,
                 obs: "Mover Stock",
-                costo: 0,
+                costo: item.precio_compra,
                 iva: item.iva
             }
 

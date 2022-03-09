@@ -2,7 +2,6 @@ require('dotenv').config()
 
 let host = ""
 let publicFiles = ""
-
 const local = 1
 if (process.env.NODE_ENV === "development") {
     if (local === 1) {
@@ -45,7 +44,8 @@ const stockDir = {
     sub: {
         ultMov: stock + "/ultMov",
         moverStock: stock + "/moverStock",
-        ultStockList: stock + "/ultStockList"
+        ultStockList: stock + "/ultStockList",
+        listaStock: stock + "/listaStock"
     }
 }
 

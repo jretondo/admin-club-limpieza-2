@@ -1,12 +1,11 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, FormGroup, Input, Label, Row, Table } from 'reactstrap';
+import React, { useState } from 'react';
+import { Button, Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
 import MarcasMod from './marcas';
 import ProductosFiltro from './productos';
 import ProveedoresMod from './proveedores';
 import PtosVtas from './ptosVta';
 import UrlNodeServer from '../../../../../../../api/NodeServer';
-import { BsArrowUpCircle, BsArrowDownCircle } from 'react-icons/bs';
 import FilaOrden from './filaOrden';
 
 const HeaderUltMovStock = ({
@@ -21,6 +20,8 @@ const HeaderUltMovStock = ({
     const [proveedor, setProveedor] = useState("")
     const [proveedoresList, setProveedoresList] = useState(<option value={""}>No hay proveedores para listar</option>)
     const [prodId, setProdId] = useState("")
+    const [group, setGroup] = useState(0)
+    const [asc, setAsc] = useState("")
     const [ordenlist, setOrdenList] = useState([
         {
             orden: 0,
@@ -42,11 +43,10 @@ const HeaderUltMovStock = ({
 
 
     const getList = async () => {
-        let query = ""
-        //`?desde=${desde}&hasta=${hasta}&prodId=${prodId}&tipoMov=${tipoMov}&pvId=${ptosVta.id}&userId=${user.id}&cat=${proveedor}&subcat=${marca}`
+        let query = `?prodId=${prodId}&pvId=${ptosVta.id}&cat=${proveedor}&subcat=${marca}&group=${group}&order=${JSON.stringify(ordenlist)}&desc=${asc}`
 
         setLoading(true)
-        await axios.get(UrlNodeServer.stockDir.sub.ultStockList + "/" + pagina + query, {
+        await axios.get(UrlNodeServer.stockDir.sub.listaStock + "/" + pagina + query, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('user-token')
             }
@@ -120,7 +120,10 @@ const HeaderUltMovStock = ({
     }
 
     return (
-        <Form>
+        <Form onSubmit={e => {
+            e.preventDefault()
+            getList()
+        }}>
             <Row>
                 <Col md="8">
                     <Row>
@@ -155,7 +158,7 @@ const HeaderUltMovStock = ({
                         <Col>
                             <FormGroup>
                                 <Label for="exampleSelect">Agrupación</Label>
-                                <Input type="select" name="select" id="exampleSelect">
+                                <Input onChange={e => setGroup(e.target.value)} value={group} type="select" name="select" id="exampleSelect">
                                     <option value={0}>Por producto</option>
                                     <option value={1}>Por Marca</option>
                                     <option value={2}>Por Proveedor</option>
@@ -170,9 +173,9 @@ const HeaderUltMovStock = ({
                             <Label for="exampleSelect">Orden</Label>
                         </Col>
                         <Col style={{ textAlign: "left" }}>
-                            <Input type="select" style={{ height: "25px", paddingTop: "2px", paddingBottom: "2px" }} id="exampleSelect">
-                                <option>Ascendente</option>
-                                <option>Descendente</option>
+                            <Input value={asc} onChange={e => setAsc(e.target.value)} type="select" style={{ height: "25px", paddingTop: "2px", paddingBottom: "2px" }} id="exampleSelect">
+                                <option value={""} >Ascendente</option>
+                                <option value={1}>Descendente</option>
                             </Input>
                         </Col>
                     </Row>

@@ -1,11 +1,11 @@
 import ListadoTable from 'components/subComponents/Listados/ListadoTable';
-import FilaVentas from 'components/subComponents/Listados/SubComponentes/FilaStock2';
+import FilaVentas from 'components/subComponents/Listados/SubComponentes/FilaStock3';
 import Paginacion from 'components/subComponents/Paginacion/Paginacion';
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'reactstrap';
 import FilaEspera from './FilaEspera';
 
-const titulos = ["Producto", "Punto de Venta", "Marca", "Proveedor", "Cant."]
+const titulos = ["Producto", "Marca", "Proveedor", "Cant.", "Costo Total"]
 
 const ListaStockMod = ({
     listaStock,
