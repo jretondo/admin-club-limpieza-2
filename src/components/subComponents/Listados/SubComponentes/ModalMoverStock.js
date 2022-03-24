@@ -191,7 +191,9 @@ const ModalNewStock = ({
                         setSuccessAlert(true)
                         setAlertar(!alertar)
                         setModal(false)
-                        setCall(!call)
+                        setTimeout(() => {
+                            setCall(!call)
+                        }, 500);
                     } else {
                         setMsgStrong("Hubo un error! ")
                         setMsgGralAlert("No se pudo eliminar el producto.")
@@ -278,7 +280,7 @@ const ModalNewStock = ({
                                                         onChange={e => setPtoVtaOrigen(JSON.parse(e.target.value))}
                                                         required
                                                     >
-                                                        <option value={{ id: 0 }}>Deposito</option>
+                                                        <option value={JSON.stringify({ id: 0 })}>Deposito</option>
                                                         {plantPtosVta}
                                                     </Input>
                                                 </FormGroup>
@@ -346,7 +348,7 @@ const ModalNewStock = ({
                                                         onChange={e => setPtoVtaDestino(JSON.parse(e.target.value))}
                                                         required
                                                     >
-                                                        <option value={{ id: 0 }}>Deposito</option>
+                                                        <option value={JSON.stringify({ id: 0 })}>Deposito</option>
                                                         {plantPtosVta}
                                                     </Input>
                                                 </FormGroup>

@@ -53,6 +53,7 @@ const ModalChangeCodBarras = ({
             swal(`Cambios en ${item.name}!`, "Hubo un error inesperado", "error");
             console.log('error :>> ', error);
         }).finally(() => {
+            setModal(false)
             setTimeout(() => {
                 setCall(!call)
             }, 1500);
