@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Form,
     FormGroup,
@@ -11,7 +11,6 @@ import {
 import Col from 'reactstrap/lib/Col'
 
 const BusquedaProdForm = ({
-    busquedaBool,
     setPalabraBuscada,
     palabraBuscada,
     setBusquedaBool,
@@ -19,86 +18,68 @@ const BusquedaProdForm = ({
     setCall,
     titulo
 }) => {
+    const [primera, setPrimera] = useState(false)
 
-    const BuscarPalabra = (e) => {
-        e.preventDefault()
+    const BuscarPalabra = () => {
         setBusquedaBool(true)
         setCall(!call)
     }
 
-    const CancelaBusqueda = (e) => {
-        e.preventDefault()
-        setBusquedaBool(false)
-        setPalabraBuscada("")
-        setCall(!call)
+    const changeText = (e) => {
+        if (palabraBuscada.length > 0) {
+            setPrimera(true)
+        }
+        setPalabraBuscada(e.target.value)
     }
 
-    if (busquedaBool) {
-        return (
-            <Form
-                className="navbar-search navbar-search-dark form-inline mr-3 d-md-flex ml-lg-auto"
-                style={{ textAlign: "right" }}
-            >
-                <FormGroup className="mb-0" style={{ marginLeft: "auto" }}>
-                    <Row>
-                        <Col style={{ textAlign: "center", paddingTop: "25px", paddingRight: 0 }} >
-                            <span>Palabra buscada</span>
-                        </Col>
-                        <Col md="6" >
-                            <InputGroup className="input-group-alternative" style={{ borderRadius: 0 }}>
-                                <Input
-                                    value={palabraBuscada}
-                                    type="text"
-                                    style={{ color: "#7a66de", padding: "30px", fontWeight: "bold", fontSize: "18px" }}
-                                    disabled
-                                />
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={e => CancelaBusqueda(e)}
-                                        >X</button>
-                                    </InputGroupText>
-                                </InputGroupAddon>
-                            </InputGroup>
-                        </Col>
-                    </Row>
-                </FormGroup>
-            </Form>
-        )
-    } else {
-        return (
-            <Form
-                className="navbar-search navbar-search-dark form-inline mr-3 d-md-flex ml-lg-auto"
-                style={{ textAlign: "right" }}
-                onSubmit={e => BuscarPalabra(e)}
-            >
-                <FormGroup className="mb-0" style={{ marginLeft: "auto" }}>
-                    <Row>
-                        <Col style={{ textAlign: "center", paddingTop: "16px", paddingRight: 0 }} >
-                            <span>{titulo}</span>
-                        </Col>
-                        <Col md="6" >
-                            <InputGroup className="input-group-alternative">
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>
-                                        <i className="fas fa-search" style={{ color: "black" }} />
-                                    </InputGroupText>
-                                </InputGroupAddon>
-                                <Input
-                                    placeholder="Buscar"
-                                    type="text"
-                                    style={{ color: "black" }}
-                                    value={palabraBuscada}
-                                    onChange={e => setPalabraBuscada(e.target.value)}
-                                />
-                            </InputGroup>
-                        </Col>
-                    </Row>
-                </FormGroup>
-            </Form>
-        )
-    }
+    useEffect(() => {
+        if (palabraBuscada.length === 0) {
+            if (primera) {
+                BuscarPalabra()
+            }
+        }
+    }, [palabraBuscada])
+
+    useEffect(() => {
+        document.getElementById("inp-busqueda").focus()
+    }, [])
+
+    return (
+        <Form
+            className="navbar-search navbar-search-dark form-inline mr-3 d-md-flex ml-lg-auto"
+            style={{ textAlign: "right" }}
+            onSubmit={e => {
+                e.preventDefault()
+                BuscarPalabra(e)
+            }}
+        >
+            <FormGroup className="mb-0" style={{ marginLeft: "auto" }}>
+                <Row>
+                    <Col style={{ textAlign: "center", paddingTop: "16px", paddingRight: 0 }} >
+                        <span>{titulo}</span>
+                    </Col>
+                    <Col md="6" >
+                        <InputGroup className="input-group-alternative">
+                            <InputGroupAddon addonType="prepend">
+                                <InputGroupText>
+                                    <i className="fas fa-search" style={{ color: "black" }} />
+                                </InputGroupText>
+                            </InputGroupAddon>
+                            <Input
+                                placeholder="Buscar"
+                                type="text"
+                                style={{ color: "black" }}
+                                value={palabraBuscada}
+                                onChange={e => changeText(e)}
+                                id="inp-busqueda"
+                            />
+                        </InputGroup>
+                    </Col>
+                </Row>
+            </FormGroup>
+        </Form>
+    )
+
 }
 
 export default BusquedaProdForm

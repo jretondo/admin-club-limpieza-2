@@ -15,7 +15,6 @@ const Index = () => {
         call,
         cookie
     )
-
     useEffect(() => {
         setCookie(localStorage.getItem("loginInfo"))
         setUrl(UrlNodeServer.Veriflog)

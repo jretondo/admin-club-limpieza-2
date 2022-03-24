@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row, Spinner } from 'reactstrap';
 import ListadoTable from 'components/subComponents/Listados/ListadoTable';
 import axios from 'axios';
-import UrlNodeServer from 'api/NodeServer';
+import UrlNodeServer from '../../../../../../api/NodeServer';
 import FilaProdSearch from 'components/subComponents/Listados/SubComponentes/filaPordSearch';
 
 const ModalSearchProd = ({
