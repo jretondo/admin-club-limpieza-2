@@ -72,9 +72,11 @@ const ModalNewStock = ({
     }, [roundBool])
 
     useEffect(() => {
-        StockActualLista()
+        if (modal) {
+            StockActualLista()
+        }
         // eslint-disable-next-line
-    }, [ptoVta])
+    }, [ptoVta, modal])
 
     useEffect(() => {
         if (modal && !loading) {

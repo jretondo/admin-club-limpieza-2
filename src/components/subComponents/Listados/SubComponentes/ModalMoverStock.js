@@ -35,14 +35,18 @@ const ModalNewStock = ({
     }, [])
 
     useEffect(() => {
-        StockActualListaOrigen()
+        if (modal) {
+            StockActualListaOrigen()
+        }
         // eslint-disable-next-line
-    }, [ptoVtaOrigen])
+    }, [ptoVtaOrigen, modal])
 
     useEffect(() => {
-        StockActualListaDestino()
+        if (modal) {
+            StockActualListaDestino()
+        }
         // eslint-disable-next-line
-    }, [ptoVtaDestino])
+    }, [ptoVtaDestino, modal])
 
     useEffect(() => {
         if (modal && !loading) {
@@ -98,6 +102,7 @@ const ModalNewStock = ({
     }
 
     const StockActualListaOrigen = async () => {
+        console.log('pasa origen:>> ');
         const query = `?idProd=${item.id_prod}&idPv=${ptoVtaOrigen.id}`
         await axios.get(`${UrlNodeServer.stockDir.stock}${query}`, {
             headers: {
@@ -119,6 +124,7 @@ const ModalNewStock = ({
     }
 
     const StockActualListaDestino = async () => {
+        console.log('pasa destino:>> ');
         const query = `?idProd=${item.id_prod}&idPv=${ptoVtaDestino.id}`
 
         await axios.get(`${UrlNodeServer.stockDir.stock}${query}`, {

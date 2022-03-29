@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
 import MarcasMod from './marcas';
 import ProductosFiltro from './productos';
@@ -119,6 +119,10 @@ const HeaderUltMovStock = ({
         })
     }
 
+    useEffect(() => {
+        getList()
+    }, [pagina])
+
     return (
         <Form onSubmit={e => {
             e.preventDefault()
@@ -174,8 +178,8 @@ const HeaderUltMovStock = ({
                         </Col>
                         <Col style={{ textAlign: "left" }}>
                             <Input value={asc} onChange={e => setAsc(e.target.value)} type="select" style={{ height: "25px", paddingTop: "2px", paddingBottom: "2px" }} id="exampleSelect">
-                                <option value={""} >Ascendente</option>
-                                <option value={1}>Descendente</option>
+                                <option value={""} >Descendente</option>
+                                <option value={1}>Ascendente</option>
                             </Input>
                         </Col>
                     </Row>
