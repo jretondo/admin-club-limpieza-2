@@ -22,7 +22,6 @@ const PtosVtas = ({
             }
         })
             .then(res => {
-                console.log('res :>> ', res);
                 const respuesta = res.data
                 const status = parseInt(respuesta.status)
                 if (status === 200) {

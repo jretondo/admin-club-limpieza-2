@@ -45,7 +45,8 @@ const stockDir = {
         ultMov: stock + "/ultMov",
         moverStock: stock + "/moverStock",
         ultStockList: stock + "/ultStockList",
-        listaStock: stock + "/listaStock"
+        listaStock: stock + "/listaStock",
+        stockProd: stock + "/stockProd"
     }
 }
 

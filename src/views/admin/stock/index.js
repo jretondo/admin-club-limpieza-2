@@ -18,6 +18,7 @@ import { useWindowSize } from "Hooks/UseWindowSize";
 import ButtonOpenCollapse from "components/buttonOpen";
 import UlMovMod from "./components/ultMov";
 import ListaStockMod from './components/listaStock';
+import RemoveStock from './components/remove';
 
 const ProductsItems = () => {
     const [call, setCall] = useState(false)
@@ -35,6 +36,9 @@ const ProductsItems = () => {
     }
     const activeListaStock = () => {
         setModuleActive(1)
+    }
+    const activeRemoveStock = () => {
+        setModuleActive(2)
     }
 
     useEffect(() => {
@@ -76,6 +80,11 @@ const ProductsItems = () => {
                                         tittle={"Listado de Stock"}
                                         active={moduleActive === 1 ? true : false}
                                     />
+                                    <ButtonOpenCollapse
+                                        action={activeRemoveStock}
+                                        tittle={"Quitar Stock"}
+                                        active={moduleActive === 2 ? true : false}
+                                    />
                                 </ButtonGroup>
                             </CardBody>
                         </Card>
@@ -85,6 +94,9 @@ const ProductsItems = () => {
 
                         <Collapse isOpen={moduleActive === 1 ? true : false} >
                             <ListaStockMod />
+                        </Collapse>
+                        <Collapse isOpen={moduleActive === 2 ? true : false} >
+                            <RemoveStock />
                         </Collapse>
                     </div>
                 </Container>
