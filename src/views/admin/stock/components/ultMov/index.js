@@ -3,7 +3,9 @@ import { Card, CardBody } from 'reactstrap';
 import HeaderUltMovStock from './components/header';
 import ListaStockMod from './components/list';
 
-const UlMovMod = () => {
+const UlMovMod = ({
+    moduleActive
+}) => {
     const [listaStock, setListaStock] = useState([])
     const [pagina, setPagina] = useState(1)
     const [loading, setLoading] = useState(false)
@@ -15,6 +17,7 @@ const UlMovMod = () => {
                     setListaStock={setListaStock}
                     pagina={pagina}
                     setLoading={setLoading}
+                    moduleActive={moduleActive}
                 />
                 <ListaStockMod
                     listaStock={listaStock}

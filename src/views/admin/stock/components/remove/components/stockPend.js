@@ -2,13 +2,16 @@ import UrlNodeServer from '../../../../../../api/NodeServer';
 import axios from 'axios';
 import React, { useEffect } from 'react';
 import { Col, FormGroup, Input, Label } from 'reactstrap';
+import './shimmer.css';
 
 const StockPend = ({
     colSize,
     prodId,
     ptoVtaId,
     stock,
-    setStock
+    setStock,
+    cargarStock,
+    loading
 }) => {
 
     const getStockPend = async () => {
@@ -33,13 +36,13 @@ const StockPend = ({
 
     useEffect(() => {
         getStockPend()
-    }, [prodId, ptoVtaId])
+    }, [prodId, ptoVtaId, cargarStock])
 
     return (
         <Col md={colSize}>
             <FormGroup>
                 <Label for="ptoVtaTxt">Stock Pendiente</Label>
-                <Input value={stock} required disabled />
+                <Input className={loading ? "shimmer3" : ""} value={stock} required disabled />
             </FormGroup>
         </Col>
     )

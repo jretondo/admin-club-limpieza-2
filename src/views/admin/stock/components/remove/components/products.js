@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Button, Col, Input, InputGroup, InputGroupAddon, Label } from 'reactstrap';
 import ModalSearchProd from './modalSearch';
+import './shimmer.css';
 
 const ProductosFiltro = ({
     colSize,
-    setProdId
+    setProdId,
+    loading
 }) => {
     const [prodSearchModal, setProdSearchModal] = useState(false)
     const [prodText, setProdText] = useState("")
@@ -15,8 +17,8 @@ const ProductosFiltro = ({
         <Col md={colSize}>
             <Label for="ptoVtaTxt">Producto</Label>
             <InputGroup>
-                <Input value={prodText} disabled />
-                <InputGroupAddon addonType="append"><Button color="primary" onClick={prodSearchToggle}>Buscar</Button></InputGroupAddon>
+                <Input className={loading ? "shimmer3" : ""} value={prodText} disabled />
+                <InputGroupAddon addonType="append"><Button className={loading ? "shimmer2" : ""} disabled={loading} color="primary" onClick={prodSearchToggle}>Buscar</Button></InputGroupAddon>
             </InputGroup>
             <ModalSearchProd
                 prodSearchModal={prodSearchModal}

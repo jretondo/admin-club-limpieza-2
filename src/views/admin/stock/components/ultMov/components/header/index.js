@@ -12,7 +12,8 @@ import swal from 'sweetalert';
 const HeaderUltMovStock = ({
     setListaStock,
     pagina,
-    setLoading
+    setLoading,
+    moduleActive
 }) => {
     const [ptosVta, setPtoVta] = useState({ id: "" })
     const [ptoVtaList, setPtoVtaList] = useState(<option>No hay puntos de venta relacionados</option>)
@@ -54,7 +55,7 @@ const HeaderUltMovStock = ({
     useEffect(() => {
         getList()
         // eslint-disable-next-line
-    }, [pagina, ptosVta, user, marca, proveedor, desde, hasta, prodId, tipoMov])
+    }, [pagina, ptosVta, user, marca, proveedor, desde, hasta, prodId, tipoMov, moduleActive])
 
     return (
         <Form>

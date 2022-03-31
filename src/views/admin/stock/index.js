@@ -89,11 +89,15 @@ const ProductsItems = () => {
                             </CardBody>
                         </Card>
                         <Collapse isOpen={moduleActive === 0 ? true : false} >
-                            <UlMovMod />
+                            <UlMovMod
+                                moduleActive={moduleActive}
+                            />
                         </Collapse>
 
                         <Collapse isOpen={moduleActive === 1 ? true : false} >
-                            <ListaStockMod />
+                            <ListaStockMod
+                                moduleActive={moduleActive}
+                            />
                         </Collapse>
                         <Collapse isOpen={moduleActive === 2 ? true : false} >
                             <RemoveStock />

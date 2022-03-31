@@ -1,0 +1,29 @@
+.shimmer3{
+background-image: linear-gradient(
+    90deg,
+    #EEEEEE 0%, #EEEEEE 40%,
+    #DDDDDD 50%, #DDDDDD 55%,
+    #EEEEEE 65%, #EEEEEE 100%
+);
+
+background-size: 400%;
+animation: shimmer 1500ms infinite;
+}
+
+.shimmer2{
+    background-image: linear-gradient(
+        90deg,
+        #0081c9 0%, #0081c9 40%,
+        #DDDDDD 50%, #DDDDDD 55%,
+        #0081c9 65%, #0081c9 100%
+    );
+    
+    background-size: 400%;
+    animation: shimmer 1500ms infinite;
+    }
+
+
+@keyframes shimmer {
+    from {background-position: 100% 100%;}
+    to {background-position: 0 0;}
+}

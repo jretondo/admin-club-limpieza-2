@@ -11,7 +11,8 @@ import FilaOrden from './filaOrden';
 const HeaderUltMovStock = ({
     setListaStock,
     pagina,
-    setLoading
+    setLoading,
+    moduleActive
 }) => {
     const [ptosVta, setPtoVta] = useState({ id: "" })
     const [ptoVtaList, setPtoVtaList] = useState(<option>No hay puntos de venta relacionados</option>)
@@ -121,7 +122,7 @@ const HeaderUltMovStock = ({
 
     useEffect(() => {
         getList()
-    }, [pagina])
+    }, [pagina, moduleActive])
 
     return (
         <Form onSubmit={e => {

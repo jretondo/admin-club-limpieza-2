@@ -8,7 +8,8 @@ const PtosVtas = ({
     setPtoVtaList,
     ptoVtaList,
     ptoVta,
-    colSize
+    colSize,
+    loading
 }) => {
     useEffect(() => {
         getPv()
@@ -46,7 +47,7 @@ const PtosVtas = ({
         <Col md={colSize} >
             <Label for="ptoVtaTxt">Punto de Venta</Label>
             <FormGroup>
-                <Input type="select" id="ptoVtaTxt" onChange={e => setPtoVta(JSON.parse(e.target.value))} value={JSON.stringify(ptoVta)}>
+                <Input className={loading ? "shimmer3" : ""} disabled={loading} type="select" id="ptoVtaTxt" onChange={e => setPtoVta(JSON.parse(e.target.value))} value={JSON.stringify(ptoVta)}>
                     {ptoVtaList}
                     <option value={JSON.stringify({ id: -1 })} key={99} >Deposito</option>
                 </Input>
