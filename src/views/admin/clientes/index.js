@@ -195,6 +195,7 @@ const ClientesView = () => {
                                 } else {
                                     primero = false
                                 }
+                                console.log('item :>> ', item);
                                 return (
                                     <FilaProveedores
                                         id={key}
@@ -460,7 +461,7 @@ const ClientesView = () => {
                                                                     className="form-control-alternative"
                                                                     id="input-username"
                                                                     placeholder={
-                                                                        nvoTipoDoc === 0 ?
+                                                                        parseInt(nvoTipoDoc) === 0 ?
                                                                             "Nº de CUIT" :
                                                                             "Nº de DNI"
                                                                     }
@@ -476,8 +477,11 @@ const ClientesView = () => {
                                                                 <Label for="exampleSelect">Cond. IVA</Label>
                                                                 <Input type="select" onChange={e => setNvoCondIva(e.target.value)}>
                                                                     <option value={0}>Cons. Final</option>
-                                                                    <option value={1}>Res. Inscripto</option>
-                                                                    <option value={2}>Monotributista</option>
+                                                                    {
+                                                                        parseInt(nvoTipoDoc) == 0 ?
+                                                                            <>  <option value={1}>Res. Inscripto</option>
+                                                                                <option value={2}>Monotributista</option></> : null
+                                                                    }
                                                                 </Input>
                                                             </FormGroup>
                                                         </Col>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row, Spinner } from 'reactstrap';
+import { Col, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row, Spinner } from 'reactstrap';
 import ListadoTable from 'components/subComponents/Listados/ListadoTable';
 import axios from 'axios';
 import UrlNodeServer from 'api/NodeServer';
@@ -62,49 +62,44 @@ const ModalSearchProd = ({
             })
     }
 
-    const Todos = () => {
-        prodSearchToggle()
-        setProdText("Todos los Productos")
-        setProdId(null)
-    }
-
     return (
         <div>
             <Modal isOpen={prodSearchModal} toggle={prodSearchToggle} size="lg" >
                 <ModalHeader toggle={prodSearchToggle}>Buscar Cliente</ModalHeader>
                 <ModalBody>
-                    <Form onSubmit={e => {
-                        e.preventDefault();
-                        Find();
-                    }}>
-                        <Row>
-                            <Col md="10">
-                                <FormGroup>
-                                    <Label for="dataFindTxt">Producto</Label>
-                                    <Input
-                                        type="text"
-                                        id="dataFindTxt"
-                                        placeholder="Nombre, cod. de bara, proveedor, etc"
-                                        value={dataFind}
-                                        required
-                                        onChange={e => {
-                                            e.preventDefault();
-                                            setDataFind(e.target.value)
-                                        }}
-                                    />
-                                </FormGroup>
-                            </Col>
-                            <Col md="2">
-                                <button
-                                    className='btn btn-primary'
-                                    style={{ marginTop: "31px" }}
-                                    type='submit'
-                                >
-                                    Buscar
-                                </button>
-                            </Col>
-                        </Row>
-                    </Form>
+
+                    <Row>
+                        <Col md="10">
+                            <FormGroup>
+                                <Label for="dataFindTxt">Producto</Label>
+                                <Input
+                                    type="text"
+                                    id="dataFindTxt"
+                                    placeholder="Nombre, cod. de bara, proveedor, etc"
+                                    value={dataFind}
+                                    required
+                                    onChange={e => {
+                                        e.preventDefault();
+                                        setDataFind(e.target.value)
+                                    }}
+                                />
+                            </FormGroup>
+                        </Col>
+                        <Col md="2">
+                            <button
+                                className='btn btn-primary'
+                                style={{ marginTop: "31px" }}
+                                onClick={
+                                    e => {
+                                        e.preventDefault();
+                                        Find()
+                                    }
+                                }
+                            >
+                                Buscar
+                            </button>
+                        </Col>
+                    </Row>
                     {
                         loading ?
                             <div style={{ textAlign: "center" }}>

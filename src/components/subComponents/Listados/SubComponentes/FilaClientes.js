@@ -97,7 +97,7 @@ const FilaProducto = ({
                 {item.razsoc}
             </td>
             <td style={{ textAlign: "center" }}>
-                {parseInt(item.tipoDoc) === 0 ?
+                {parseInt(item.cuit) === 0 ?
                     "CUIT " + item.ndoc :
                     "DNI " + item.ndoc
                 }

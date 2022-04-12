@@ -180,7 +180,7 @@ const InvoiceHeader = ({
                                                 <Label for="factFiscTxt">Tipo Doc.</Label>
                                                 <Input type="select" id="factFiscTxt" value={tipoDoc} onChange={e => setTipoDoc(e.target.value)} >
                                                     <option value={80}>CUIT</option>
-                                                    <option value={99}>DNI</option>
+                                                    <option value={96}>DNI</option>
                                                 </Input>
                                             </FormGroup>
                                         </Col>
