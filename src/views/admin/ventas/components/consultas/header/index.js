@@ -68,8 +68,8 @@ const HeaderListaCaja = ({
                             ptoVta={ptosVta}
                             colSize={4}
                         />
-                        <Col md="2">
-                            <Label for="nroCbteTxt">Nº Comprobante</Label>
+                        <Col md="3">
+                            <Label for="nroCbteTxt">Nº Cbte.</Label>
                             <Input
                                 type="number"
                                 id="nroCbteTxt"
@@ -79,8 +79,8 @@ const HeaderListaCaja = ({
                                 placeholder="Nº Comprobante..."
                             />
                         </Col>
-                        <Col md="4">
-                            <Label for="conceptoTxt">Concepto o cliente</Label>
+                        <Col md="3">
+                            <Label for="conceptoTxt">Concepto</Label>
                             <Input
                                 type="text"
                                 id="conceptoTxt"
@@ -102,10 +102,10 @@ const HeaderListaCaja = ({
                 </Col>
                 <Col md="2" >
                     <Row >
-                        <Col style={{ textAlign: "center", margin: "15px" }} >
+                        <Col style={{ textAlign: "center", marginTop: "20px" }} >
                             <Button
                                 color="primary"
-                                style={{ height: "70px", width: "170px", fontSize: "16px" }}
+                                style={{ height: "100%", width: "100%", fontSize: "16px" }}
                                 type="submit"
                             >
                                 <span style={{ textAlign: "center", width: "100%" }}> Buscar</span>

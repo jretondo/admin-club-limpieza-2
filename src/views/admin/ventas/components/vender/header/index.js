@@ -4,9 +4,12 @@ import CompleteCerosLeft from 'Function/CompleteCeroLeft';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react'
 import {
+    Button,
     Col,
     FormGroup,
     Input,
+    InputGroup,
+    InputGroupAddon,
     Label,
     Row,
 } from "reactstrap";
@@ -105,30 +108,34 @@ const InvoiceHeader = ({
                 <Row>
                     <Col style={{ border: "2px solid red", padding: "15px", margin: 0 }} >
                         <Row>
-                            <Col md="3" >
-                                <FormGroup>
-                                    <Label for="exampleEmail">Fecha</Label>
-                                    <Input type="date" value={moment(new Date()).format("YYYY-MM-DD")} disabled />
-                                </FormGroup>
-                            </Col>
-                            <PtosVtas
-                                setPtoVta={setPtoVta}
-                                setPtoVtaList={setPtoVtaList}
-                                ptoVtaList={ptoVtaList}
-                                ptoVta={ptoVta}
-                                colSize={4}
-                            />
-                            <Col md="1" >
-                                <FormGroup>
-                                    <Label for="factFiscTxt">Fiscal</Label>
-                                    <Input type="select" id="factFiscTxt" value={factFiscBool} onChange={e => setFactFiscBool(e.target.value)} >
-                                        <option value={0}>No</option>
-                                        {
-                                            ptoVta.cond_iva === 0 ? null :
-                                                <option value={1}>Si</option>
-                                        }
-                                    </Input>
-                                </FormGroup>
+                            <Col md="8">
+                                <Row>
+                                    <Col md="4" >
+                                        <FormGroup>
+                                            <Label for="exampleEmail">Fecha</Label>
+                                            <Input type="date" value={moment(new Date()).format("YYYY-MM-DD")} disabled />
+                                        </FormGroup>
+                                    </Col>
+                                    <PtosVtas
+                                        setPtoVta={setPtoVta}
+                                        setPtoVtaList={setPtoVtaList}
+                                        ptoVtaList={ptoVtaList}
+                                        ptoVta={ptoVta}
+                                        colSize={6}
+                                    />
+                                    <Col md="2" >
+                                        <FormGroup>
+                                            <Label for="factFiscTxt">Fiscal</Label>
+                                            <Input type="select" id="factFiscTxt" value={factFiscBool} onChange={e => setFactFiscBool(e.target.value)} >
+                                                <option value={0}>No</option>
+                                                {
+                                                    ptoVta.cond_iva === 0 ? null :
+                                                        <option value={1}>Si</option>
+                                                }
+                                            </Input>
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
                             </Col>
                             <Col md="4" >
                                 <Row>
@@ -198,24 +205,27 @@ const InvoiceHeader = ({
                                             setTfact={setTfact}
                                             setCondIvaCli={setCondIvaCli}
                                             factFiscBool={factFiscBool}
+                                            colSize={3}
                                         />
-                                        <Col md="3">
+                                        <Col md="4">
                                             <Label for="razSocTxt">{parseInt(tipoDoc) === 80 ? "Raz. Soc." : "Nombre"}</Label>
-                                            <FormGroup>
-                                                <Input type="text" id="razSocTxt" value={razSoc} onChange={e => setRazSoc(e.target.value)} />
-                                            </FormGroup>
-                                        </Col>
-                                        <Col>
-                                            <button
-                                                className="btn btn-primary"
-                                                style={{ marginTop: "31px" }}
-                                                onClick={e => {
-                                                    e.preventDefault();
-                                                    setCuitSearchModal(true);
-                                                }}
-                                            >
-                                                Buscar
-                                            </button>
+                                            <InputGroup>
+                                                <Input
+                                                    type="text"
+                                                    id="razSocTxt"
+                                                    value={razSoc}
+                                                    onChange={e => setRazSoc(e.target.value)}
+                                                    required
+                                                />
+                                                < InputGroupAddon addonType="append">
+                                                    <Button className="btn btn-info" onClick={(e) => {
+                                                        e.preventDefault();
+                                                        setCuitSearchModal(true);
+                                                    }} >
+                                                        <i className="fas fa-search" ></i>
+                                                    </Button>
+                                                </InputGroupAddon>
+                                            </ InputGroup>
                                         </Col>
                                     </> :
                                     <></>

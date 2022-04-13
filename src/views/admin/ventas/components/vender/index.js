@@ -20,6 +20,7 @@ import swal from "sweetalert";
 import moment from "moment";
 import axios from "axios";
 import FileSaver from 'file-saver'
+import { verificadorCuit } from "Function/VerificadorCuit";
 
 const Ventas = () => {
     const [clienteBool, setClienteBool] = useState(0)
@@ -71,8 +72,35 @@ const Ventas = () => {
                 cliente_ndoc: ndoc,
                 cliente_name: razSoc,
                 lista_prod: productsSellList
-            }
+            },
+            fiscal: factFiscBool
         }
+        if (productsSellList.length > 0) {
+            if (parseInt(clienteBool) === 1) {
+                if (parseInt(tipoDoc) === 96) {
+                    const largo = ndoc.length
+                    if (largo > 8 || largo < 7) {
+                        swal("Error en el DNI!", "El DNI que trata de cargar es inválido! Reviselo.", "error");
+                    } else {
+                        facturar(data)
+                    }
+                } else {
+                    const esCuit = verificadorCuit(ndoc).isCuit
+                    if (esCuit) {
+                        facturar(data)
+                    } else {
+                        swal("Error en el CUIT!", "El CUIT que trata de cargar es inválido! Reviselo.", "error");
+                    }
+                }
+            } else {
+                facturar(data)
+            }
+        } else {
+            swal("Error en el carrito!", "No hay productos para facturar! Controlelo.", "error");
+        }
+    }
+
+    const facturar = async (data) => {
         setProcessing(true)
         await axios.post(UrlNodeServer.invoicesDir.invoices, data, {
             responseType: 'arraybuffer',
@@ -80,27 +108,23 @@ const Ventas = () => {
                 'Authorization': 'Bearer ' + localStorage.getItem('user-token'),
                 Accept: 'application/pdf',
             }
-        })
-            .then(res => {
-                let headerLine = res.headers['content-disposition'];
-                console.log('headerLine :>> ', headerLine);
-                const largo = parseInt(headerLine.length)
-                let filename = headerLine.substring(21, largo);
-                var blob = new Blob([res.data], { type: "application/pdf" });
-                FileSaver.saveAs(blob, filename);
-                setProcessing(false)
-                cancelarCompra()
-                if (envioEmailBool) {
-                    swal("Nueva Factura!", "La factura se ha generado con éxito y pronto le llegará al cliente por email!", "success");
-                } else {
-                    swal("Nueva Factura!", "La factura se ha generado con éxito!", "success");
-                }
-            })
-            .catch((err) => {
-                console.log('object :>> ', err);
-                setProcessing(false)
-                swal("Error inesperado!", "La factura no se pudo generar por un error en los datos! Controle que no falten datos importantes en la cabecera", "error");
-            })
+        }).then(res => {
+            let headerLine = res.headers['content-disposition'];
+            console.log('headerLine :>> ', headerLine);
+            const largo = parseInt(headerLine.length)
+            let filename = headerLine.substring(21, largo);
+            var blob = new Blob([res.data], { type: "application/pdf" });
+            FileSaver.saveAs(blob, filename);
+            cancelarCompra()
+            if (envioEmailBool) {
+                swal("Nueva Factura!", "La factura se ha generado con éxito y pronto le llegará al cliente por email!", "success");
+            } else {
+                swal("Nueva Factura!", "La factura se ha generado con éxito!", "success");
+            }
+        }).catch((err) => {
+            console.log('object :>> ', err);
+            swal("Error inesperado!", "La factura no se pudo generar por un error en los datos! Controle que no falten datos importantes en la cabecera", "error");
+        }).finally(() => { setProcessing(false) })
     }
 
     return (

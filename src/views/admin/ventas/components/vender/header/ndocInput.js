@@ -17,7 +17,8 @@ const NdocInput = ({
     ptoVta,
     setTfact,
     setCondIvaCli,
-    factFiscBool
+    factFiscBool,
+    colSize
 }) => {
     const Find = async () => {
         if (parseInt(tipoDoc) === 96) {
@@ -71,9 +72,9 @@ const NdocInput = ({
             const esCuit = verificadorCuit(ndoc).isCuit
             if (esCuit) {
                 setInvalidNdoc(false)
-                if (parseInt(factFiscBool) === 1) {
-                    await getDataFiscalClient()
-                }
+
+                await getDataFiscalClient()
+
                 await axios.get(`${UrlNodeServer.clientesDir.clientes}/${1}`, {
                     params: {
                         search: ndoc,
@@ -176,7 +177,7 @@ const NdocInput = ({
     }
 
     return (
-        <Col md="3">
+        <Col md={colSize}>
             <Label for="ndocTxt">{parseInt(tipoDoc) === 80 ? "Nº CUIT" : "Nº Doc."}</Label>
             <FormGroup>
                 <Input

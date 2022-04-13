@@ -127,47 +127,47 @@ const HeaderListaCaja = ({
                         </Col>
                     </Row>
                 </Col>
-                <Col md="4" >
-                    <Row style={{ paddingTop: "10%" }}>
-                        <Col style={{ textAlign: "center", margin: "15px" }} >
-                            <Button
-                                color="primary"
-                                style={{ height: "100px", width: "170px", fontSize: "16px" }}
-                                type="submit"
-                            >
-                                <Row>
-                                    <span style={{ textAlign: "center", width: "100%" }}> Listar Ventas</span>
-                                </Row>
-                                <Row >
-                                    <span style={{ textAlign: "center", width: "100%", fontSize: "25px" }}> <BsCardList /></span>
-                                </Row>
-                            </Button>
-                        </Col>
-                        <Col style={{ textAlign: "center", margin: "15px" }} >
-                            {
-                                loadingPDF ?
-                                    <div style={{ textAlign: "center" }}  >
-                                        <Spinner type="border" color="red" style={{ width: "5rem", height: "5rem" }} /> </div>
-                                    :
-                                    <Button
-                                        color="danger"
-                                        style={{ height: "100px", width: "170px", fontSize: "16px" }}
-                                        onClick={e => {
-                                            e.preventDefault()
-                                            printPDF()
-                                        }}
-                                    >
-                                        <Row>
-                                            <span style={{ textAlign: "center", width: "100%" }}> Imprimir PDF</span>
-                                        </Row>
-                                        <Row >
-                                            <span style={{ textAlign: "center", width: "100%", fontSize: "25px" }}> <BsFileEarmarkPdfFill /></span>
-                                        </Row>
-                                    </Button>
-                            }
+                <Col md="4" style={{ textAlign: "center" }} >
 
-                        </Col>
-                    </Row>
+                    <Col md="12" style={{ textAlign: "center", margin: "10px" }} >
+                        <Button
+                            color="primary"
+                            style={{ height: "100%", width: "60%", fontSize: "14px", minWidth: "125px", maxWidth: "170px" }}
+                            type="submit"
+                        >
+                            <Row>
+                                <span style={{ textAlign: "center", width: "100%" }}> Listar Ventas</span>
+                            </Row>
+                            <Row >
+                                <span style={{ textAlign: "center", width: "100%", fontSize: "25px" }}> <BsCardList /></span>
+                            </Row>
+                        </Button>
+                    </Col>
+
+                    <Col md="12" style={{ textAlign: "center", margin: "10px" }} >
+                        {
+                            loadingPDF ?
+                                <div style={{ textAlign: "center" }}  >
+                                    <Spinner type="border" color="red" style={{ width: "5rem", height: "5rem" }} /> </div>
+                                :
+                                <Button
+                                    color="danger"
+                                    style={{ height: "100%", width: "60%", fontSize: "14px", minWidth: "125px", maxWidth: "170px" }}
+                                    onClick={e => {
+                                        e.preventDefault()
+                                        printPDF()
+                                    }}
+                                >
+                                    <Row>
+                                        <span style={{ textAlign: "center", width: "100%" }}> Imprimir PDF</span>
+                                    </Row>
+                                    <Row >
+                                        <span style={{ textAlign: "center", width: "100%", fontSize: "25px" }}> <BsFileEarmarkPdfFill /></span>
+                                    </Row>
+                                </Button>
+                        }
+
+                    </Col>
                 </Col>
             </Row>
         </Form>
