@@ -52,8 +52,6 @@ const CtaCteListClientMod = ({
                 setEsperar(false)
                 const respuesta = res.data
                 const status = parseInt(respuesta.status)
-
-                console.log('respuesta   :>> ', respuesta);
                 if (status === 200) {
                     const body = respuesta.body
                     setDataList(body.pagesObj)

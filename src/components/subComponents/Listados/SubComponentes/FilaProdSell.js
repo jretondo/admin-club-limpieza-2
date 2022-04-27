@@ -18,7 +18,7 @@ const FilaProdSell = ({
                 {item.cant_prod}
             </td>
             <td style={{ textAlign: "center" }}>
-                $ {formatMoney(item.vta_price / (1 + (item.iva / 100)))}
+                $ {formatMoney(item.vta_price)}
             </td>
             <td style={{ textAlign: "center" }}>
                 $ {formatMoney(item.vta_price / (1 + (item.iva / 100)) * item.cant_prod)}

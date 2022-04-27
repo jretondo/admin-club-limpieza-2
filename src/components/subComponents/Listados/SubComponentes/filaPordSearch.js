@@ -29,7 +29,7 @@ const FilaProdSearch = ({
             </td>
             <td className="text-right">
                 <button
-                    onClick={() => SelectProd(item.cod_barra)}
+                    onClick={() => SelectProd(item.name)}
                     className='btn btn-success'>
                     <i className="fas fa-check" ></i>
                 </button>

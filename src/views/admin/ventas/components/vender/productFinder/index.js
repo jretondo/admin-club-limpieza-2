@@ -67,6 +67,7 @@ const ProductFinder = () => {
             document.getElementById("prodTxtFinder").select()
         }
     }, [error])
+
     return (
         <>
             <Form onSubmit={e => {

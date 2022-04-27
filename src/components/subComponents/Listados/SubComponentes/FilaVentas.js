@@ -133,7 +133,7 @@ const FilaVentas = ({
     return (
         <tr key={id}>
             <td style={{ textAlign: "center" }}>
-                {moment(item.fecha).format("DD/MM/YYYY")}
+                {moment(item.create_time).format("DD/MM/YYYY HH:mm") + " hs"}
             </td>
             <td style={{ textAlign: "center" }}>
                 {item.raz_soc_cliente === "" ? "Consumidor Final" : item.raz_soc_cliente} {parseInt(item.tipo_doc_cliente) === 80 ? "(CUIT: " + item.n_doc_cliente + ")" : parseInt(item.tipo_doc_cliente) === 96 ? "(DNI: " + item.n_doc_cliente + ")" : ""}

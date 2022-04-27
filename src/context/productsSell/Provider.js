@@ -11,6 +11,7 @@ const ProdSellProvider = ({ children }) => {
     const [error, setError] = useState()
 
     const NewProdSell = async (text, cant) => {
+        console.log('text :>> ', text);
         setError()
         await axios.get(UrlNodeServer.productsDir.products + `/1?query=${text}&cantPerPage=1`, {
             headers: {
@@ -22,9 +23,56 @@ const ProdSellProvider = ({ children }) => {
                 const status = respuesta.status
                 if (status === 200) {
                     const data = respuesta.body.data[0]
-                    data.cant_prod = cant
-                    data.key = (Math.random() * parseFloat(moment(new Date()).format("YYYYMMDDHHmmssms")))
-                    setProductsSellList(productsSellList => [...productsSellList, data])
+                    if (parseInt(data.unidad) === 0) {
+                        data.cant_prod = cant
+                        data.key = (Math.random() * parseFloat(moment(new Date()).format("YYYYMMDDHHmmssms")))
+                        setProductsSellList(productsSellList => [...productsSellList, data])
+                    } else if (parseInt(data.unidad) === 1) {
+                        swal({
+                            text: 'Cantidad de kilos a vender',
+                            content: "input",
+                            button: {
+                                text: "Ingresar",
+                                closeModal: false,
+                            },
+                        })
+                            .then(cantidad => {
+                                if (parseInt(cantidad) > 0) {
+                                    data.cant_prod = parseFloat(cantidad)
+                                    data.key = (Math.random() * parseFloat(moment(new Date()).format("YYYYMMDDHHmmssms")))
+                                    setProductsSellList(productsSellList => [...productsSellList, data])
+                                    swal.stopLoading();
+                                    swal.close();
+                                } else {
+                                    swal("Error!", "Hubo un error. Controle que haya colocado un número válido!", "error");
+                                }
+                            }).catch(() => {
+                                swal("Error!", "Hubo un error. Controle que haya colocado un número válido!", "error");
+                            });
+                    } else if (parseInt(data.unidad) === 2) {
+                        swal({
+                            text: 'Cantidad de litros a vender',
+                            content: "input",
+                            button: {
+                                text: "Ingresar",
+                                closeModal: false,
+                            },
+                        })
+                            .then(cantidad => {
+                                if (parseInt(cantidad) > 0) {
+                                    data.cant_prod = parseFloat(cantidad)
+                                    data.key = (Math.random() * parseFloat(moment(new Date()).format("YYYYMMDDHHmmssms")))
+                                    setProductsSellList(productsSellList => [...productsSellList, data])
+                                    swal.stopLoading();
+                                    swal.close();
+                                } else {
+                                    swal("Error!", "Hubo un error. Controle que haya colocado un número válido!", "error");
+                                }
+                            }).catch(() => {
+                                swal("Error!", "Hubo un error. Controle que haya colocado un número válido!", "error");
+                            });
+                    }
+
                 }
             }).catch((err) => { setError(err) })
     }

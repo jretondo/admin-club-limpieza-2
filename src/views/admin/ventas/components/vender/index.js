@@ -1,11 +1,14 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import UrlNodeServer from '../../../../../api/NodeServer'
 import {
+    Button,
     Card,
     CardBody,
     Col,
     FormGroup,
     Input,
+    InputGroup,
+    InputGroupAddon,
     Label,
     Row,
     Spinner
@@ -37,6 +40,7 @@ const Ventas = () => {
     const [tfact, setTfact] = useState(1)
     const [condIvaCli, setCondIvaCli] = useState(0)
     const [processing, setProcessing] = useState(false)
+    const [descuentoPerc, setDescuentoPer] = useState(0)
 
     const { totalPrecio, cancelarCompra, productsSellList } = useContext(productsSellContext)
 
@@ -71,7 +75,8 @@ const Ventas = () => {
                 cliente_tdoc: parseInt(clienteBool) === 0 ? 99 : tipoDoc,
                 cliente_ndoc: ndoc,
                 cliente_name: razSoc,
-                lista_prod: productsSellList
+                lista_prod: productsSellList,
+                descuentoPerc: descuentoPerc
             },
             fiscal: factFiscBool
         }
@@ -110,12 +115,12 @@ const Ventas = () => {
             }
         }).then(res => {
             let headerLine = res.headers['content-disposition'];
-            console.log('headerLine :>> ', headerLine);
             const largo = parseInt(headerLine.length)
             let filename = headerLine.substring(21, largo);
             var blob = new Blob([res.data], { type: "application/pdf" });
             FileSaver.saveAs(blob, filename);
             cancelarCompra()
+            setDescuentoPer(0)
             if (envioEmailBool) {
                 swal("Nueva Factura!", "La factura se ha generado con éxito y pronto le llegará al cliente por email!", "success");
             } else {
@@ -169,19 +174,55 @@ const Ventas = () => {
 
                             <ProdListSell />
 
-                            <Row style={{ marginTop: "25px" }}>
+                            <Row style={{ marginTop: 0 }}>
                                 <Col md="2" style={{ marginLeft: "auto", textAlign: "right" }}>
                                     <Label style={{ fontSize: "25px", fontWeight: "bold" }} >
-                                        Total:
+                                        Subtotal:
                                     </Label>
                                 </Col>
-                                <Col md="3" >
+                                <Col md="4" >
                                     <FormGroup>
                                         <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={"$ " + formatMoney(totalPrecio)} disabled />
                                     </FormGroup>
                                 </Col>
                             </Row>
-                            <Row style={{ marginTop: "25px" }}>
+
+                            <Row style={{ marginTop: 0 }}>
+                                <Col md="2" style={{ marginLeft: "auto", textAlign: "right" }}>
+                                    <Label style={{ fontSize: "25px", fontWeight: "bold" }} >
+                                        Descuento:
+                                    </Label>
+                                </Col>
+                                <Col md="4" >
+                                    <FormGroup>
+                                        <Row>
+                                            <Col md="4" >
+                                                <InputGroup>
+                                                    <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={descuentoPerc} onChange={e => setDescuentoPer(e.target.value)} min={0} max={100} />
+                                                    <InputGroupAddon addonType="append">%</InputGroupAddon>
+                                                </InputGroup>
+                                            </Col>
+                                            <Col md="8">
+                                                <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={"$ " + formatMoney(((descuentoPerc > 0 && descuentoPerc <= 100) ? (totalPrecio * (descuentoPerc / 100)) : 0))} disabled />
+                                            </Col>
+                                        </Row>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+
+                            <Row style={{ marginTop: 0 }}>
+                                <Col md="2" style={{ marginLeft: "auto", textAlign: "right" }}>
+                                    <Label style={{ fontSize: "25px", fontWeight: "bold" }} >
+                                        Total:
+                                    </Label>
+                                </Col>
+                                <Col md="4" >
+                                    <FormGroup>
+                                        <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={"$ " + formatMoney((parseFloat(descuentoPerc) > 0 && parseFloat(descuentoPerc) <= 100) ? (totalPrecio - (totalPrecio * (descuentoPerc / 100))) : totalPrecio)} disabled />
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                            <Row style={{ marginTop: 0 }}>
                                 <Col>
                                     <button
                                         className="btn btn-primary"
