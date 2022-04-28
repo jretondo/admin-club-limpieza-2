@@ -8,10 +8,10 @@ const FilaProdSearch = ({
     prodSearchToggle,
     findProd
 }) => {
-    const SelectProd = (codBarra) => {
+    const SelectProd = (prod) => {
         prodSearchToggle()
-        setProdText(codBarra)
-        findProd(codBarra)
+        setProdText(prod.name)
+        findProd("id:" + prod.id_prod)
     }
     return (
         <tr key={id}>
@@ -29,7 +29,7 @@ const FilaProdSearch = ({
             </td>
             <td className="text-right">
                 <button
-                    onClick={() => SelectProd(item.name)}
+                    onClick={() => SelectProd(item)}
                     className='btn btn-success'>
                     <i className="fas fa-check" ></i>
                 </button>

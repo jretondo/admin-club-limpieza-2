@@ -2,23 +2,29 @@ import CompleteCerosLeft from '../../../../Function/CompleteCeroLeft';
 import formatMoney from 'Function/NumberFormat';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { DropdownItem, DropdownMenu, DropdownToggle, Spinner, UncontrolledDropdown } from 'reactstrap';
+import { DropdownItem, DropdownMenu, DropdownToggle, Spinner, UncontrolledDropdown, Button, Tooltip } from 'reactstrap';
 import { BsFileEarmarkPdfFill, BsTelegram, BsFillXCircleFill } from "react-icons/bs";
+import { FiRefreshCcw } from 'react-icons/fi';
 import axios from 'axios';
 import UrlNodeServer from '../../../../api/NodeServer';
 import swal from 'sweetalert';
 import { validateEmail } from 'Function/emailValidator';
 import FileSaver from 'file-saver';
+import ModalChangeType from './ModalChangeType';
 
 const FilaVentas = ({
     id,
-    item
+    item,
+    pagina,
+    setPagina
 }) => {
     const [wait, setWait] = useState(false)
     const [comprobante, setComprobante] = useState({
         pv: "00000",
         cbte: "00000000"
     })
+    const [tooltp, setTooltp] = useState(false)
+    const [modal1, setModal1] = useState(false)
 
     const getFact = async (idFact, send) => {
         let query = ""
@@ -125,6 +131,15 @@ const FilaVentas = ({
         })
     }
 
+    const cambiarFormaPago = (e, item) => {
+        e.preventDefault()
+        setModal1(true)
+    }
+
+    const toggleToolTip = () => {
+        setTooltp(!tooltp)
+    }
+
     useEffect(() => {
         completarCeros()
         // eslint-disable-next-line
@@ -149,6 +164,14 @@ const FilaVentas = ({
                                 parseInt(item.forma_pago) === 4 ? "Cuenta Corriente" :
                                     "Transferencia"
                 }
+                <Button style={{ borderRadius: "10%", marginInline: "10px" }} color={"info"} id={`buttonChange-${item.id}`}
+                    onClick={e => cambiarFormaPago(e, item)}
+                >
+                    <FiRefreshCcw />
+                </Button>
+                <Tooltip placement="right" isOpen={tooltp} target={`buttonChange-${item.id}`} toggle={toggleToolTip}>
+                    Cambiar Forma de Pago
+                </Tooltip>
             </td>
             <td style={{ textAlign: "center" }}>
                 $ {formatMoney(item.total_fact)}
@@ -206,6 +229,13 @@ const FilaVentas = ({
                 }
 
             </td>
+            <ModalChangeType
+                setModal={setModal1}
+                modal={modal1}
+                item={item}
+                pagina={pagina}
+                setPagina={setPagina}
+            />
         </tr>
     )
 }

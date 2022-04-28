@@ -34,6 +34,8 @@ const VentasListMod = ({
                                 key={key}
                                 id={key}
                                 item={item}
+                                pagina={pagina}
+                                setPagina={setPagina}
                             />
                         )
                     })

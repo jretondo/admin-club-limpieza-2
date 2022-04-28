@@ -23,6 +23,7 @@ const ProdSellProvider = ({ children }) => {
                 const status = respuesta.status
                 if (status === 200) {
                     const data = respuesta.body.data[0]
+                    console.log('data :>> ', data);
                     if (parseInt(data.unidad) === 0) {
                         data.cant_prod = cant
                         data.key = (Math.random() * parseFloat(moment(new Date()).format("YYYYMMDDHHmmssms")))

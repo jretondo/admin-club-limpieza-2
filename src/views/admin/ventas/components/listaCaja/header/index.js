@@ -15,8 +15,8 @@ const HeaderListaCaja = ({
     pagina,
     setLoading
 }) => {
-    const hoy1 = (moment(new Date()).format("YYYY-MM-DD 00:00"))
-    const hoy2 = (moment(new Date()).format("YYYY-MM-DD HH:mm"))
+    const hoy1 = (moment(new Date()).format("YYYY-MM-DD"))
+    const hoy2 = (moment(new Date()).format("YYYY-MM-DD"))
     const [ptosVta, setPtoVta] = useState({ id: 0 })
     const [ptoVtaList, setPtoVtaList] = useState(<option>No hay puntos de venta relacionados</option>)
     const [user, setUser] = useState({ id: 0 })
@@ -26,9 +26,8 @@ const HeaderListaCaja = ({
     const [loadingPDF, setLoadingPDF] = useState(false)
 
     const getDataInvoices = async () => {
-        console.log('desde :>> ', desde);
         setLoading(true)
-        const query = `?userId=${user.id}&ptoVta=${ptosVta.id}&desde=${moment(desde).format("YYYY-MM-DD HH:mm")}&hasta=${moment(hasta).format("YYYY-MM-DD HH:mm")}`
+        const query = `?userId=${user.id}&ptoVta=${ptosVta.id}&desde=${moment(desde).format("YYYY-MM-DD")}&hasta=${moment(hasta).format("YYYY-MM-DD")}`
         await axios.get(UrlNodeServer.invoicesDir.sub.cajaList + "/" + pagina + query, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('user-token')
@@ -51,7 +50,7 @@ const HeaderListaCaja = ({
 
     const printPDF = async () => {
         setLoadingPDF(true)
-        const query = `?userId=${user.id}&ptoVta=${ptosVta.id}&desde=${moment(desde).format("YYYY-MM-DD HH:mm")}&hasta=${moment(hasta).format("YYYY-MM-DD HH:mm")}`
+        const query = `?userId=${user.id}&ptoVta=${ptosVta.id}&desde=${moment(desde).format("YYYY-MM-DD")}&hasta=${moment(hasta).format("YYYY-MM-DD")}`
         await axios.get(UrlNodeServer.invoicesDir.sub.cajaListPDF + query, {
             responseType: 'arraybuffer',
             headers: {
@@ -108,7 +107,7 @@ const HeaderListaCaja = ({
                             <FormGroup>
                                 <Label for="desdeTxtCaja">Desde</Label>
                                 <Input
-                                    type="datetime-local"
+                                    type="date"
                                     id="desdeTxtCaja"
                                     value={desde}
                                     onChange={e => setDesde(e.target.value)}
@@ -119,7 +118,7 @@ const HeaderListaCaja = ({
                         <Col md="4">
                             <Label for="desdeTxtCaja">Hasta</Label>
                             <Input
-                                type="datetime-local"
+                                type="date"
                                 id="desdeTxtCaja"
                                 value={hasta}
                                 onChange={e => setHasta(e.target.value)}
