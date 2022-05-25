@@ -38,9 +38,9 @@ const FilaClientesSearch = ({
                 {item.razsoc}
             </td>
             <td style={{ textAlign: "center" }}>
-                {item.condIva === 1 ?
-                    "Res. Inscripto" : item.cond_iva === 2 ?
-                        "Monotributista" : "Cons. Final"
+                {parseInt(item.cond_iva) === 1 ?
+                    "Res. Inscripto" : parseInt(item.cond_iva) === 6 ?
+                        "Monotributista" : parseInt(item.cond_iva) === 4 ? "Exento" : "Cons. Final"
                 }
             </td>
             <td style={{ textAlign: "center" }}>

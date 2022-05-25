@@ -25,7 +25,9 @@ import axios from "axios";
 import FileSaver from 'file-saver'
 import { verificadorCuit } from "Function/VerificadorCuit";
 
-const Ventas = () => {
+const Ventas = ({
+    setValidPV
+}) => {
     const [clienteBool, setClienteBool] = useState(0)
     const [factFiscBool, setFactFiscBool] = useState(0)
     const [tipoDoc, setTipoDoc] = useState(80)
@@ -121,6 +123,12 @@ const Ventas = () => {
             FileSaver.saveAs(blob, filename);
             cancelarCompra()
             setDescuentoPer(0)
+            setFormaPago(0)
+            setFactFiscBool(0)
+            setNdoc("")
+            setClienteBool(false)
+            setEnvioEmailBool(false)
+            setRazSoc("")
             if (envioEmailBool) {
                 swal("Nueva Factura!", "La factura se ha generado con éxito y pronto le llegará al cliente por email!", "success");
             } else {
@@ -132,10 +140,10 @@ const Ventas = () => {
         }).finally(() => { setProcessing(false) })
     }
 
+
     return (
         <Card >
             <CardBody>
-
                 {
                     processing ?
                         <div style={{ textAlign: "center" }}>
@@ -166,6 +174,7 @@ const Ventas = () => {
                                 tfact={tfact}
                                 setTfact={setTfact}
                                 setCondIvaCli={setCondIvaCli}
+                                setValidPV={setValidPV}
                             />
 
                             <br />

@@ -170,7 +170,6 @@ const ListaClientesMod = ({
                                 } else {
                                     primero = false
                                 }
-                                console.log('item :>> ', item);
                                 return (
                                     <FilaProveedores
                                         id={key}
@@ -436,7 +435,8 @@ const ListaClientesMod = ({
                                                             {
                                                                 parseInt(nvoTipoDoc) == 0 ?
                                                                     <>  <option value={1}>Res. Inscripto</option>
-                                                                        <option value={2}>Monotributista</option></> : null
+                                                                        <option value={4}>Exento</option>
+                                                                        <option value={6}>Monotributista</option></> : null
                                                             }
                                                         </Input>
                                                     </FormGroup>
@@ -458,7 +458,7 @@ const ListaClientesMod = ({
                                                             type="email"
                                                             value={nvoEmail}
                                                             onChange={e => setNvoEmail(e.target.value)}
-                                                            required
+
                                                         />
                                                     </FormGroup>
                                                 </Col>
@@ -477,7 +477,7 @@ const ListaClientesMod = ({
                                                             type="text"
                                                             value={nvoTelefono}
                                                             onChange={e => setNvoTelefono(e.target.value)}
-                                                            required
+
                                                         />
                                                     </FormGroup>
                                                 </Col>

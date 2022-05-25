@@ -38,7 +38,8 @@ const ProdSellProvider = ({ children }) => {
                             },
                         })
                             .then(cantidad => {
-                                if (parseInt(cantidad) > 0) {
+                                console.log('cantidad :>> ', cantidad);
+                                if (parseFloat(cantidad) > 0) {
                                     data.cant_prod = parseFloat(cantidad)
                                     data.key = (Math.random() * parseFloat(moment(new Date()).format("YYYYMMDDHHmmssms")))
                                     setProductsSellList(productsSellList => [...productsSellList, data])
@@ -60,7 +61,7 @@ const ProdSellProvider = ({ children }) => {
                             },
                         })
                             .then(cantidad => {
-                                if (parseInt(cantidad) > 0) {
+                                if (parseFloat(cantidad) > 0) {
                                     data.cant_prod = parseFloat(cantidad)
                                     data.key = (Math.random() * parseFloat(moment(new Date()).format("YYYYMMDDHHmmssms")))
                                     setProductsSellList(productsSellList => [...productsSellList, data])

@@ -216,6 +216,7 @@ const FilaVentas = ({
                                 </DropdownItem>
                                 <DropdownItem
                                     href="#pablo"
+                                    disabled={parseInt(item.nota_cred) === 1 ? true : false}
                                     onClick={e => {
                                         e.preventDefault(e)
                                         anularFact(item.id)

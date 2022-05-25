@@ -9,10 +9,19 @@ import ListaCajaModule from './components/listaCaja';
 import ConsultaVentasModule from './components/consultas';
 import ButtonOpenCollapse from '../../../components/buttonOpen';
 import { useWindowSize } from '../../../Hooks/UseWindowSize';
+import axios from 'axios';
+import InfoAfipMod from './components/vender/infoAfip';
 
 const VentasModule = () => {
     const [call, setCall] = useState(false)
     const [moduleActive, setModuleActive] = useState(0)
+    const [validPV, setValidPV] = useState([])
+    const [afipStatus, setAfipStatus] = useState({
+        latencia: 0,
+        status: 0,
+        info: "Esperando respuesta...",
+    })
+    const [refreshAfip, setRefreshAfip] = useState(false)
     const width = useWindowSize()
 
     const activeVentas = () => {
@@ -25,10 +34,59 @@ const VentasModule = () => {
         setModuleActive(2)
     }
 
+    const getDummy = async () => {
+        setAfipStatus({
+            latencia: 0,
+            status: 0,
+            info: "Esperando respuesta...",
+        })
+        const query = `?certFile=${validPV.cert_file}&keyFile=${validPV.key_file}&cuit=${validPV.cuit}`
+        await axios.get(UrlNodeServer.invoicesDir.sub.dummy + query, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('user-token')
+            }
+        }).then(res => {
+            const respuesta = res.data
+            const status = respuesta.status
+            if (status === 200) {
+                setAfipStatus({
+                    latencia: respuesta.body.difference,
+                    status: respuesta.body.statusDummy.status,
+                    info: respuesta.body.statusDummy.data,
+                })
+            } else {
+                setAfipStatus({
+                    latencia: 0,
+                    status: 500,
+                    info: "Error desconocido",
+                })
+            }
+        }).catch(error => {
+            console.error(error);
+            setAfipStatus({
+                latencia: 0,
+                status: 500,
+                info: "Error desconocido",
+            })
+        })
+    }
+
     useEffect(() => {
         setCall(!call)
         // eslint-disable-next-line
     }, [])
+
+    useEffect(() => {
+        getDummy()
+        const intervalDummy = setInterval(() => {
+            getDummy()
+        }, 300000);
+        return () => clearInterval(intervalDummy)
+    }, [validPV])
+
+    useEffect(() => {
+        getDummy()
+    }, [refreshAfip])
 
     const { loading, error } = UseSecureRoutes(
         UrlNodeServer.routesDir.sub.stock,
@@ -53,7 +111,7 @@ const VentasModule = () => {
                 <Header />
                 <Container className="mt--7" fluid>
                     <div style={{ width: "100%" }}>
-                        <Card style={{ marginTop: "5px", marginBottom: "20px" }}>
+                        <Card style={{ marginTop: "5px", marginBottom: "10px" }}>
                             <CardBody style={{ textAlign: "center" }}>
                                 <ButtonGroup vertical={width > 1030 ? false : true}>
                                     <ButtonOpenCollapse
@@ -74,8 +132,15 @@ const VentasModule = () => {
                                 </ButtonGroup>
                             </CardBody>
                         </Card>
+                        <InfoAfipMod
+                            afipStatus={afipStatus}
+                            setRefreshAfip={setRefreshAfip}
+                            refreshAfip={refreshAfip}
+                        />
                         <Collapse isOpen={moduleActive === 0 ? true : false} >
-                            <VenderModule />
+                            <VenderModule
+                                setValidPV={setValidPV}
+                            />
                         </Collapse>
 
                         <Collapse isOpen={moduleActive === 2 ? true : false} >

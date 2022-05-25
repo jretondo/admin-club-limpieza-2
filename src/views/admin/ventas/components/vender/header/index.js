@@ -40,7 +40,8 @@ const InvoiceHeader = ({
     setInvalidNdoc,
     tfact,
     setTfact,
-    setCondIvaCli
+    setCondIvaCli,
+    setValidPV
 }) => {
     const [ptoVtaList, setPtoVtaList] = useState(<option>No hay puntos de venta relacionados</option>)
     const [cbteStr, setCbteStr] = useState("")
@@ -122,6 +123,7 @@ const InvoiceHeader = ({
                                         ptoVtaList={ptoVtaList}
                                         ptoVta={ptoVta}
                                         colSize={6}
+                                        setValidPV={setValidPV}
                                     />
                                     <Col md="2" >
                                         <FormGroup>

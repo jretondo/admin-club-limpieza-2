@@ -120,9 +120,9 @@ const FilaProducto = ({
             </td>
             <td style={{ textAlign: "center" }}>
                 {parseInt(item.cond_iva) === 1 ?
-                    "Res. Inscripto" : parseInt(item.cond_iva) === 2 ?
-                        "Monotributista" : parseInt(item.cond_iva) === 3 ?
-                            "Cons. Final" : "Exento"
+                    "Res. Inscripto" : parseInt(item.cond_iva) === 6 ?
+                        "Monotributista" : parseInt(item.cond_iva) === 4 ?
+                            "Exento" : "Cons. Final"
                 }
             </td>
             <td className="text-right">
