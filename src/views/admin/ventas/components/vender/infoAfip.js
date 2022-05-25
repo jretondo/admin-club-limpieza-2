@@ -14,7 +14,7 @@ const InfoAfipMod = ({
                 <Row>
                     <Col md="6" className="estadoAfip1">
                         <span>
-                            Estado de servidor del AFIP:
+                            Estado de los servidores de AFIP:
                         </span>
                         <span style={{ fontSize: "20px" }}></span>
                     </Col>
