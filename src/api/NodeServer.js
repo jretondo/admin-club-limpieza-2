@@ -129,7 +129,8 @@ const invoicesDir = {
         factDataPDF: invoices + "/factDataPDF",
         notaCred: invoices + "/notaCred",
         paytype: invoices + "/paytype",
-        dummy: invoices + "/dummy"
+        dummy: invoices + "/dummy",
+        timeout: invoices + "/timeout"
     }
 }
 

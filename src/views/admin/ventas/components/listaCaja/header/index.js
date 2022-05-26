@@ -13,7 +13,8 @@ import FileSaver from 'file-saver';
 const HeaderListaCaja = ({
     setListaCaja,
     pagina,
-    setLoading
+    setLoading,
+    actualizar
 }) => {
     const hoy1 = (moment(new Date()).format("YYYY-MM-DD"))
     const hoy2 = (moment(new Date()).format("YYYY-MM-DD"))
@@ -77,7 +78,7 @@ const HeaderListaCaja = ({
     useEffect(() => {
         getDataInvoices()
         // eslint-disable-next-line
-    }, [pagina])
+    }, [pagina, actualizar])
 
     return (
         <Form onSubmit={e => {

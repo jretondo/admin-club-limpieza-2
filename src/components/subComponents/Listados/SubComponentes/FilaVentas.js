@@ -16,7 +16,9 @@ const FilaVentas = ({
     id,
     item,
     pagina,
-    setPagina
+    setPagina,
+    setActualizar,
+    actualizar
 }) => {
     const [wait, setWait] = useState(false)
     const [comprobante, setComprobante] = useState({
@@ -113,6 +115,7 @@ const FilaVentas = ({
                     FileSaver.saveAs(blob, filename);
                     setWait(false)
                     swal("Anulación de Factura", "La factura ha sido eliminada con éxito!", "success");
+                    setActualizar(!actualizar)
                 })
                 .catch(error => {
                     setWait(false)
@@ -146,7 +149,7 @@ const FilaVentas = ({
     }, [item.pv, item.cbte])
 
     return (
-        <tr key={id}>
+        <tr key={id} style={parseInt(item.id_fact_asoc) !== 0 ? { background: "#e8e8e8" } : {}}>
             <td style={{ textAlign: "center" }}>
                 {moment(item.create_time).format("DD/MM/YYYY HH:mm") + " hs"}
             </td>
@@ -164,7 +167,7 @@ const FilaVentas = ({
                                 parseInt(item.forma_pago) === 4 ? "Cuenta Corriente" :
                                     "Transferencia"
                 }
-                <Button style={{ borderRadius: "10%", marginInline: "10px" }} color={"info"} id={`buttonChange-${item.id}`}
+                <Button disabled={parseInt(item.id_fact_asoc) !== 0} style={{ borderRadius: "10%", marginInline: "10px" }} color={"info"} id={`buttonChange-${item.id}`}
                     onClick={e => cambiarFormaPago(e, item)}
                 >
                     <FiRefreshCcw />
@@ -216,7 +219,7 @@ const FilaVentas = ({
                                 </DropdownItem>
                                 <DropdownItem
                                     href="#pablo"
-                                    disabled={parseInt(item.nota_cred) === 1 ? true : false}
+                                    disabled={parseInt(item.id_fact_asoc) !== 0 ? true : false}
                                     onClick={e => {
                                         e.preventDefault(e)
                                         anularFact(item.id)
@@ -225,6 +228,20 @@ const FilaVentas = ({
                                     <BsFillXCircleFill />
                                     Cancelar Factura
                                 </DropdownItem>
+                                {
+                                    parseInt(item.id_fact_asoc) !== 0 ?
+                                        <DropdownItem
+                                            href="#pablo"
+                                            onClick={e => {
+                                                e.preventDefault(e)
+                                                getFact(item.id_fact_asoc, false)
+                                            }}
+                                        >
+                                            <BsFileEarmarkPdfFill />
+                                            {parseInt(item.nota_cred) === 0 ? "Ver Nota de Crédito" : "Ver Factura Anulada"}
+                                        </DropdownItem>
+                                        : null
+                                }
                             </DropdownMenu>
                         </UncontrolledDropdown>
                 }

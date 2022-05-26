@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import UrlNodeServer from '../../../../../api/NodeServer'
 import {
     Button,
@@ -24,6 +24,7 @@ import moment from "moment";
 import axios from "axios";
 import FileSaver from 'file-saver'
 import { verificadorCuit } from "Function/VerificadorCuit";
+import ModalChange from "./modalChange";
 
 const Ventas = ({
     setValidPV
@@ -44,6 +45,8 @@ const Ventas = ({
     const [processing, setProcessing] = useState(false)
     const [descuentoPerc, setDescuentoPer] = useState(0)
 
+    const [modal1, setModal1] = useState(false)
+
     const { totalPrecio, cancelarCompra, productsSellList } = useContext(productsSellContext)
 
     const cancelar = () => {
@@ -56,8 +59,8 @@ const Ventas = ({
         })
             .then((willDelete) => {
                 if (willDelete) {
-                    setClienteBool(false)
-                    setEnvioEmailBool(false)
+                    setClienteBool(0)
+                    setEnvioEmailBool(0)
                     cancelarCompra()
                 }
             });
@@ -82,28 +85,32 @@ const Ventas = ({
             },
             fiscal: factFiscBool
         }
-        if (productsSellList.length > 0) {
-            if (parseInt(clienteBool) === 1) {
-                if (parseInt(tipoDoc) === 96) {
-                    const largo = ndoc.length
-                    if (largo > 8 || largo < 7) {
-                        swal("Error en el DNI!", "El DNI que trata de cargar es inválido! Reviselo.", "error");
+        if (totalPrecio > 15795 & parseInt(clienteBool) === 0 & parseInt(factFiscBool) === 1) {
+            swal("Error: Consumidor Final!", "Cuando el importe supere los $15.795,00 se tendrá que identificar el consumidor final si o si por exigencias de AFIP.", "error");
+        } else {
+            if (productsSellList.length > 0) {
+                if (parseInt(clienteBool) === 1) {
+                    if (parseInt(tipoDoc) === 96) {
+                        const largo = ndoc.length
+                        if (largo > 8 || largo < 7) {
+                            swal("Error en el DNI!", "El DNI que trata de cargar es inválido! Reviselo.", "error");
+                        } else {
+                            facturar(data)
+                        }
                     } else {
-                        facturar(data)
+                        const esCuit = verificadorCuit(ndoc).isCuit
+                        if (esCuit) {
+                            facturar(data)
+                        } else {
+                            swal("Error en el CUIT!", "El CUIT que trata de cargar es inválido! Reviselo.", "error");
+                        }
                     }
                 } else {
-                    const esCuit = verificadorCuit(ndoc).isCuit
-                    if (esCuit) {
-                        facturar(data)
-                    } else {
-                        swal("Error en el CUIT!", "El CUIT que trata de cargar es inválido! Reviselo.", "error");
-                    }
+                    facturar(data)
                 }
             } else {
-                facturar(data)
+                swal("Error en el carrito!", "No hay productos para facturar! Controlelo.", "error");
             }
-        } else {
-            swal("Error en el carrito!", "No hay productos para facturar! Controlelo.", "error");
         }
     }
 
@@ -114,8 +121,12 @@ const Ventas = ({
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('user-token'),
                 Accept: 'application/pdf',
-            }
+            },
+            timeout: 5000
         }).then(res => {
+            if (parseInt(formaPago) === 0) {
+                setModal1(true)
+            }
             let headerLine = res.headers['content-disposition'];
             const largo = parseInt(headerLine.length)
             let filename = headerLine.substring(21, largo);
@@ -126,23 +137,31 @@ const Ventas = ({
             setFormaPago(0)
             setFactFiscBool(0)
             setNdoc("")
-            setClienteBool(false)
-            setEnvioEmailBool(false)
+            setClienteBool(0)
+            setEnvioEmailBool(0)
             setRazSoc("")
             if (envioEmailBool) {
                 swal("Nueva Factura!", "La factura se ha generado con éxito y pronto le llegará al cliente por email!", "success");
             } else {
                 swal("Nueva Factura!", "La factura se ha generado con éxito!", "success");
             }
-        }).catch((err) => {
+        }).catch(async (err) => {
             console.log('object :>> ', err);
-            swal("Error inesperado!", "La factura no se pudo generar por un error en los datos! Controle que no falten datos importantes en la cabecera", "error");
+            if (err.code === 'ECONNABORTED') {
+                await swal("Tiempo de espera superado!", "Ha tardado demasiado el servidor en responder. En breve se generará la factura y la podrá ver reflejada consultando en el sistema.", "error");
+                await swal("Le mandaremos un email en cuanto se genere la factura.", "", "info");
+            } else {
+                swal("Error inesperado!", "La factura no se pudo generar por un error en los datos! Controle que no falten datos importantes en la cabecera", "error");
+            }
         }).finally(() => { setProcessing(false) })
     }
 
-
     return (
         <Card >
+            <ModalChange
+                modal={modal1}
+                toggle={() => setModal1(!modal1)}
+            />
             <CardBody>
                 {
                     processing ?
@@ -175,6 +194,8 @@ const Ventas = ({
                                 setTfact={setTfact}
                                 setCondIvaCli={setCondIvaCli}
                                 setValidPV={setValidPV}
+                                setModal1={setModal1}
+                                modal1={modal1}
                             />
 
                             <br />

@@ -97,9 +97,16 @@ const ModalChangeType = ({
                                     <Label for="factFiscTxt">Forma de Pago</Label>
                                     <Input type="select" value={payType} id="typelist" onChange={e => setPayType(e.target.value)} >
                                         <option value={0}>Efectivo</option>
-                                        <option value={1}>Mercado Pago</option>
-                                        <option value={2}>Débito</option>
-                                        <option value={3}>Crédito</option>
+                                        {
+                                            parseInt(item.fiscal) === 1 ?
+                                                <>
+                                                    <option value={1}>Mercado Pago</option>
+                                                    <option value={2}>Débito</option>
+                                                    <option value={3}>Crédito</option>
+                                                </>
+                                                :
+                                                null
+                                        }
                                     </Input>
                                 </FormGroup>
                             </ModalBody>
