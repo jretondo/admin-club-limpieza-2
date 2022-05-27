@@ -9,7 +9,8 @@ import FileSaver from 'file-saver'
 const ModalCobroCtaCte = ({
     modal,
     toggle,
-    clienteID
+    clienteID,
+    actualizar
 }) => {
     const [model, setModel] = useState("")
     const [formaPago, setFormaPago] = useState(0)
@@ -55,6 +56,7 @@ const ModalCobroCtaCte = ({
                         swal("Error inesperado!", "El no se pudo generar por un error en los datos! Controle que no falten datos importantes en la cabecera", "error");
                     }).finally(() => {
                         setProccess(false)
+                        actualizar()
                     })
                 }
             });

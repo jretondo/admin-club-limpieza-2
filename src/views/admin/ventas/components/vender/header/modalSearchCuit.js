@@ -1,7 +1,7 @@
 import UrlNodeServer from '../../../../../../api/NodeServer'
 import axios from 'axios'
 import ListadoTable from 'components/subComponents/Listados/ListadoTable'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row, Spinner } from 'reactstrap'
 import FilaClientesSearch from 'components/subComponents/Listados/SubComponentes/FilaClienteSearch'
 
@@ -92,6 +92,16 @@ const ModalSearchCuit = ({
             })
     }
 
+    useEffect(() => {
+        setTimeout(() => {
+            try {
+                document.getElementById("dataFindCuit").select()
+            } catch (error) {
+
+            }
+        }, 500);
+    }, [cuitSearchModal])
+
     return (
         <div>
             <Modal isOpen={cuitSearchModal} toggle={cuitSearchToggle} size="lg" >
@@ -104,10 +114,10 @@ const ModalSearchCuit = ({
                         <Row>
                             <Col md="10">
                                 <FormGroup>
-                                    <Label for="dataFindTxt">Cliente</Label>
+                                    <Label for="dataFindCuit">Cliente</Label>
                                     <Input
                                         type="text"
-                                        id="dataFindTxt"
+                                        id="dataFindCuit"
                                         placeholder="Nombre, CUIT, telefóno, etc"
                                         value={dataFind}
                                         required

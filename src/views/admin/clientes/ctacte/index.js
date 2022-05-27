@@ -25,6 +25,7 @@ const CtaCteListClientMod = ({
     const [tipoCons, setTipoCons] = useState(0)
     const [total, setTotal] = useState("")
     const [modalCobro, setModalCobro] = useState(false)
+    const [actualizar, setActualizar] = useState(false)
 
     const ListarCtaCte = async () => {
         let data
@@ -96,7 +97,7 @@ const CtaCteListClientMod = ({
 
     useEffect(() => {
         ListarCtaCte()
-    }, [idCliente, tipoCons])
+    }, [idCliente, tipoCons, pagina, actualizar])
 
     return (<>
         {
@@ -109,6 +110,7 @@ const CtaCteListClientMod = ({
                         modal={modalCobro}
                         toggle={() => setModalCobro(!modalCobro)}
                         clienteID={idCliente}
+                        actualizar={() => setActualizar(!actualizar)}
                     />
                     <Row>
                         <Col md="12" style={{ textAlign: "right" }} >

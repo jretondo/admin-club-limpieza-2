@@ -44,10 +44,13 @@ const NdocInput = ({
                         const body = respuesta.body
                         if (body.pagesObj.totalPag > 0) {
                             const cliente = body.data[0]
-                            let tipoCliente = cliente.cuit
+                            let tipoCliente = parseInt(cliente.cuit)
                             if (tipoCliente === 0) {
                                 tipoCliente = 80
+                            } else {
+                                tipoCliente = 96
                             }
+                            setInvalidNdoc(false)
                             setTipoDoc(tipoCliente)
                             setNdoc(cliente.ndoc)
                             setRazSoc(cliente.razsoc)
@@ -72,52 +75,53 @@ const NdocInput = ({
             const esCuit = verificadorCuit(ndoc).isCuit
             if (esCuit) {
                 setInvalidNdoc(false)
-
                 await getDataFiscalClient()
-
-                await axios.get(`${UrlNodeServer.clientesDir.clientes}/${1}`, {
-                    params: {
-                        search: ndoc,
-                        cantPerPage: 1
-                    },
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('user-token')
-                    }
-                })
-                    .then(res => {
-                        const respuesta = res.data
-                        const status = parseInt(respuesta.status)
-                        if (status === 200) {
-                            const body = respuesta.body
-                            if (body.pagesObj.totalPag > 0) {
-                                const cliente = body.data[0]
-                                let tipoCliente = cliente.cuit
-                                if (tipoCliente === 0) {
-                                    tipoCliente = 80
-                                }
-                                setTipoDoc(tipoCliente)
-                                setNdoc(cliente.ndoc)
-                                setRazSoc(cliente.razsoc)
-                                if (cliente.email.length > 0) {
-                                    setEmailCliente(cliente.email)
-                                    setEnvioEmailBool(1)
-                                }
+            } else {
+                setInvalidNdoc(true)
+            }
+            await axios.get(`${UrlNodeServer.clientesDir.clientes}/${1}`, {
+                params: {
+                    search: ndoc,
+                    cantPerPage: 1
+                },
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('user-token')
+                }
+            })
+                .then(res => {
+                    const respuesta = res.data
+                    const status = parseInt(respuesta.status)
+                    if (status === 200) {
+                        const body = respuesta.body
+                        if (body.pagesObj.totalPag > 0) {
+                            const cliente = body.data[0]
+                            let tipoCliente = parseInt(cliente.cuit)
+                            if (tipoCliente === 0) {
+                                tipoCliente = 80
                             } else {
-                                setEmailCliente("")
-                                setEnvioEmailBool(0)
+                                tipoCliente = 96
+                            }
+                            setInvalidNdoc(false)
+                            setTipoDoc(tipoCliente)
+                            setNdoc(cliente.ndoc)
+                            setRazSoc(cliente.razsoc)
+                            if (cliente.email.length > 0) {
+                                setEmailCliente(cliente.email)
+                                setEnvioEmailBool(1)
                             }
                         } else {
                             setEmailCliente("")
                             setEnvioEmailBool(0)
                         }
-                    })
-                    .catch(() => {
+                    } else {
                         setEmailCliente("")
                         setEnvioEmailBool(0)
-                    })
-            } else {
-                setInvalidNdoc(true)
-            }
+                    }
+                })
+                .catch(() => {
+                    setEmailCliente("")
+                    setEnvioEmailBool(0)
+                })
         }
     }
     const getDataFiscalClient = async () => {

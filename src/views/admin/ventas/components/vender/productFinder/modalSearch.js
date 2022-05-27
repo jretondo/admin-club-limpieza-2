@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row, Spinner } from 'reactstrap';
 import ListadoTable from 'components/subComponents/Listados/ListadoTable';
 import axios from 'axios';
@@ -60,7 +60,15 @@ const ModalSearchProd = ({
                 </tr>)
             })
     }
+    useEffect(() => {
+        setTimeout(() => {
+            try {
+                document.getElementById("dataFindTxt").select()
+            } catch (error) {
 
+            }
+        }, 500);
+    }, [prodSearchModal])
     return (
         <div>
             <Modal isOpen={prodSearchModal} toggle={prodSearchToggle} size="lg" >
