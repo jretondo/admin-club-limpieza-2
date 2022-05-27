@@ -6,6 +6,7 @@ import UrlNodeServer from '../../../../api/NodeServer'
 import axios from 'axios'
 import FilaCtaCte from 'components/subComponents/Listados/SubComponentes/FilaCtaCte';
 import formatMoney from 'Function/NumberFormat';
+import ModalCobroCtaCte from './modalCobro';
 
 const titulos = ["Fecha", "Detalle", "Factura", "Importe"]
 const CtaCteListClientMod = ({
@@ -23,6 +24,7 @@ const CtaCteListClientMod = ({
     const [dataList, setDataList] = useState([])
     const [tipoCons, setTipoCons] = useState(0)
     const [total, setTotal] = useState("")
+    const [modalCobro, setModalCobro] = useState(false)
 
     const ListarCtaCte = async () => {
         let data
@@ -103,6 +105,11 @@ const CtaCteListClientMod = ({
                     <Spinner type="grow" color="primary" style={{ width: "100px", height: "100px" }} /> </div>
                 :
                 <>
+                    <ModalCobroCtaCte
+                        modal={modalCobro}
+                        toggle={() => setModalCobro(!modalCobro)}
+                        clienteID={idCliente}
+                    />
                     <Row>
                         <Col md="12" style={{ textAlign: "right" }} >
                             <Button color={"danger"} onClick={e => {
@@ -152,8 +159,10 @@ const CtaCteListClientMod = ({
                                     <nav aria-label="..." style={{ marginBottom: "20px" }}>
                                         <button
                                             className="btn btn-primary"
-                                            onClick={e => e.preventDefault()}
-                                        >
+                                            onClick={e => {
+                                                e.preventDefault()
+                                                setModalCobro(true)
+                                            }} >
                                             Registrar Cobro
                                         </button>
                                     </nav>

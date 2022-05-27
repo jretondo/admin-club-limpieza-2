@@ -20,6 +20,8 @@ const FilaVentas = ({
     setActualizar,
     actualizar
 }) => {
+
+    console.log('item :>> ', item);
     const [wait, setWait] = useState(false)
     const [comprobante, setComprobante] = useState({
         pv: "00000",
@@ -28,7 +30,8 @@ const FilaVentas = ({
     const [tooltp, setTooltp] = useState(false)
     const [modal1, setModal1] = useState(false)
 
-    const getFact = async (idFact, send) => {
+    const getFact = async (idFact, send, type) => {
+        console.log('type :>> ', type);
         let query = ""
         let seguir = true
         if (send) {
@@ -47,8 +50,12 @@ const FilaVentas = ({
         }
 
         if (seguir) {
+            let urlGet = UrlNodeServer.invoicesDir.sub.factDataPDF
+            if (type === -1) {
+                urlGet = UrlNodeServer.clientesDir.sub.payments
+            }
             setWait(true)
-            await axios.get(UrlNodeServer.invoicesDir.sub.factDataPDF + "/" + idFact + query, {
+            await axios.get(urlGet + "/" + idFact + query, {
                 responseType: 'arraybuffer',
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('user-token'),
@@ -201,7 +208,7 @@ const FilaVentas = ({
                                     href="#pablo"
                                     onClick={e => {
                                         e.preventDefault(e)
-                                        getFact(item.id, false)
+                                        getFact(item.id, false, parseFloat(item.t_fact))
                                     }}
                                 >
                                     <BsFileEarmarkPdfFill />

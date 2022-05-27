@@ -32,7 +32,9 @@ const PtosVtas = ({
                                 }
                             }
                             if (key === 0) {
-                                setValidPV(item)
+                                if (setValidPV) {
+                                    setValidPV(item)
+                                }
                             }
                             return (
                                 <option value={JSON.stringify(item)} key={key} >{`(P.V.: ${item.pv}) ${item.direccion}`}</option>

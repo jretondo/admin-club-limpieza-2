@@ -100,7 +100,8 @@ const clientesDir = {
     sub: {
         details: clientes + "/details",
         dataFiscal: clientes + "/dataFiscal",
-        ctaCte: clientes + "/ctaCte"
+        ctaCte: clientes + "/ctaCte",
+        payments: clientes + "/payments"
     }
 }
 
