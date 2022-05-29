@@ -11,7 +11,8 @@ import {
     InputGroupAddon,
     Label,
     Row,
-    Spinner
+    Spinner,
+    Table
 } from "reactstrap";
 import './styles.css'
 import InvoiceHeader from "./header";
@@ -25,6 +26,7 @@ import axios from "axios";
 import FileSaver from 'file-saver'
 import { verificadorCuit } from "Function/VerificadorCuit";
 import ModalChange from "./modalChange";
+import FormasPagoMod from "./formasPago";
 
 const Ventas = ({
     setValidPV
@@ -44,6 +46,8 @@ const Ventas = ({
     const [condIvaCli, setCondIvaCli] = useState(0)
     const [processing, setProcessing] = useState(false)
     const [descuentoPerc, setDescuentoPer] = useState(0)
+    const [variosPagos, setVariosPagos] = useState([])
+    const [total, setTotal] = useState(0)
 
     const [modal1, setModal1] = useState(false)
 
@@ -81,37 +85,43 @@ const Ventas = ({
                 cliente_ndoc: ndoc,
                 cliente_name: razSoc,
                 lista_prod: productsSellList,
-                descuentoPerc: descuentoPerc
+                descuentoPerc: descuentoPerc,
+                variosPagos: variosPagos
             },
             fiscal: factFiscBool
         }
-        if (totalPrecio > 15795 & parseInt(clienteBool) === 0 & parseInt(factFiscBool) === 1) {
-            swal("Error: Consumidor Final!", "Cuando el importe supere los $15.795,00 se tendrá que identificar el consumidor final si o si por exigencias de AFIP.", "error");
+        if (parseInt(formaPago) === 5 && parseFloat(total) !== parseFloat(totalPrecio)) {
+            swal("Error: Total del pago!", "Revise que el total del pago debe ser igual al total de la factura.", "error");
         } else {
-            if (productsSellList.length > 0) {
-                if (parseInt(clienteBool) === 1) {
-                    if (parseInt(tipoDoc) === 96) {
-                        const largo = ndoc.length
-                        if (largo > 8 || largo < 7) {
-                            swal("Error en el DNI!", "El DNI que trata de cargar es inválido! Reviselo.", "error");
+            if (totalPrecio > 15795 && parseInt(clienteBool) === 0 && parseInt(factFiscBool) === 1) {
+                swal("Error: Consumidor Final!", "Cuando el importe supere los $15.795,00 se tendrá que identificar el consumidor final si o si por exigencias de AFIP.", "error");
+            } else {
+                if (productsSellList.length > 0) {
+                    if (parseInt(clienteBool) === 1) {
+                        if (parseInt(tipoDoc) === 96) {
+                            const largo = ndoc.length
+                            if (largo > 8 || largo < 7) {
+                                swal("Error en el DNI!", "El DNI que trata de cargar es inválido! Reviselo.", "error");
+                            } else {
+                                facturar(data)
+                            }
                         } else {
-                            facturar(data)
+                            const esCuit = verificadorCuit(ndoc).isCuit
+                            if (esCuit) {
+                                facturar(data)
+                            } else {
+                                swal("Error en el CUIT!", "El CUIT que trata de cargar es inválido! Reviselo.", "error");
+                            }
                         }
                     } else {
-                        const esCuit = verificadorCuit(ndoc).isCuit
-                        if (esCuit) {
-                            facturar(data)
-                        } else {
-                            swal("Error en el CUIT!", "El CUIT que trata de cargar es inválido! Reviselo.", "error");
-                        }
+                        facturar(data)
                     }
                 } else {
-                    facturar(data)
+                    swal("Error en el carrito!", "No hay productos para facturar! Controlelo.", "error");
                 }
-            } else {
-                swal("Error en el carrito!", "No hay productos para facturar! Controlelo.", "error");
             }
         }
+
     }
 
     const facturar = async (data) => {
@@ -139,6 +149,7 @@ const Ventas = ({
             setNdoc("")
             setClienteBool(0)
             setEnvioEmailBool(0)
+            setVariosPagos([])
             setRazSoc("")
             if (envioEmailBool) {
                 swal("Nueva Factura!", "La factura se ha generado con éxito y pronto le llegará al cliente por email!", "success");
@@ -203,56 +214,70 @@ const Ventas = ({
                             <ProductFinder />
 
                             <ProdListSell />
-
-                            <Row style={{ marginTop: 0 }}>
-                                <Col md="2" style={{ marginLeft: "auto", textAlign: "right" }}>
-                                    <Label style={{ fontSize: "25px", fontWeight: "bold" }} >
-                                        Subtotal:
-                                    </Label>
+                            <Row>
+                                <Col md="6">
+                                    <FormasPagoMod
+                                        clienteBool={clienteBool}
+                                        formaPago={formaPago}
+                                        variosPagos={variosPagos}
+                                        setVariosPagos={setVariosPagos}
+                                        factFiscBool={factFiscBool}
+                                        total={total}
+                                        setTotal={setTotal}
+                                    />
                                 </Col>
-                                <Col md="4" >
-                                    <FormGroup>
-                                        <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={"$ " + formatMoney(totalPrecio)} disabled />
-                                    </FormGroup>
+                                <Col md="6">
+                                    <Row style={{ marginTop: 0 }}>
+                                        <Col md="4" style={{ marginLeft: "auto", textAlign: "right" }}>
+                                            <Label style={{ fontSize: "25px", fontWeight: "bold" }} >
+                                                Subtotal:
+                                            </Label>
+                                        </Col>
+                                        <Col md="8" >
+                                            <FormGroup>
+                                                <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={"$ " + formatMoney(totalPrecio)} disabled />
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+
+                                    <Row style={{ marginTop: 0 }}>
+                                        <Col md="4" style={{ marginLeft: "auto", textAlign: "right" }}>
+                                            <Label style={{ fontSize: "25px", fontWeight: "bold" }} >
+                                                Descuento:
+                                            </Label>
+                                        </Col>
+                                        <Col md="8" >
+                                            <FormGroup>
+                                                <Row>
+                                                    <Col md="4" >
+                                                        <InputGroup>
+                                                            <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={descuentoPerc} onChange={e => setDescuentoPer(e.target.value)} min={0} max={100} />
+                                                            <InputGroupAddon addonType="append">%</InputGroupAddon>
+                                                        </InputGroup>
+                                                    </Col>
+                                                    <Col md="8">
+                                                        <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={"$ " + formatMoney(((descuentoPerc > 0 && descuentoPerc <= 100) ? (totalPrecio * (descuentoPerc / 100)) : 0))} disabled />
+                                                    </Col>
+                                                </Row>
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+
+                                    <Row style={{ marginTop: 0 }}>
+                                        <Col md="4" style={{ marginLeft: "auto", textAlign: "right" }}>
+                                            <Label style={{ fontSize: "25px", fontWeight: "bold" }} >
+                                                Total:
+                                            </Label>
+                                        </Col>
+                                        <Col md="8" >
+                                            <FormGroup>
+                                                <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={"$ " + formatMoney((parseFloat(descuentoPerc) > 0 && parseFloat(descuentoPerc) <= 100) ? (totalPrecio - (totalPrecio * (descuentoPerc / 100))) : totalPrecio)} disabled />
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
                                 </Col>
                             </Row>
-
-                            <Row style={{ marginTop: 0 }}>
-                                <Col md="2" style={{ marginLeft: "auto", textAlign: "right" }}>
-                                    <Label style={{ fontSize: "25px", fontWeight: "bold" }} >
-                                        Descuento:
-                                    </Label>
-                                </Col>
-                                <Col md="4" >
-                                    <FormGroup>
-                                        <Row>
-                                            <Col md="4" >
-                                                <InputGroup>
-                                                    <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={descuentoPerc} onChange={e => setDescuentoPer(e.target.value)} min={0} max={100} />
-                                                    <InputGroupAddon addonType="append">%</InputGroupAddon>
-                                                </InputGroup>
-                                            </Col>
-                                            <Col md="8">
-                                                <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={"$ " + formatMoney(((descuentoPerc > 0 && descuentoPerc <= 100) ? (totalPrecio * (descuentoPerc / 100)) : 0))} disabled />
-                                            </Col>
-                                        </Row>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-
-                            <Row style={{ marginTop: 0 }}>
-                                <Col md="2" style={{ marginLeft: "auto", textAlign: "right" }}>
-                                    <Label style={{ fontSize: "25px", fontWeight: "bold" }} >
-                                        Total:
-                                    </Label>
-                                </Col>
-                                <Col md="4" >
-                                    <FormGroup>
-                                        <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={"$ " + formatMoney((parseFloat(descuentoPerc) > 0 && parseFloat(descuentoPerc) <= 100) ? (totalPrecio - (totalPrecio * (descuentoPerc / 100))) : totalPrecio)} disabled />
-                                    </FormGroup>
-                                </Col>
-                            </Row>
-                            <Row style={{ marginTop: 0 }}>
+                            <Row style={{ marginTop: 0, textAlign: "center" }}>
                                 <Col>
                                     <button
                                         className="btn btn-primary"

@@ -172,9 +172,9 @@ const FilaVentas = ({
                         parseInt(item.forma_pago) === 2 ? "Débito" :
                             parseInt(item.forma_pago) === 3 ? "Crédito" :
                                 parseInt(item.forma_pago) === 4 ? "Cuenta Corriente" :
-                                    "Transferencia"
+                                    "Varios Métodos"
                 }
-                <Button disabled={parseInt(item.id_fact_asoc) !== 0} style={{ borderRadius: "10%", marginInline: "10px" }} color={"info"} id={`buttonChange-${item.id}`}
+                <Button disabled={parseInt(item.id_fact_asoc) !== 0 || parseInt(item.forma_pago) === 5} style={{ borderRadius: "10%", marginInline: "10px" }} color={"info"} id={`buttonChange-${item.id}`}
                     onClick={e => cambiarFormaPago(e, item)}
                 >
                     <FiRefreshCcw />

@@ -255,6 +255,7 @@ const InvoiceHeader = ({
                                                         <option value={4}>Cuenta Corriente</option> :
                                                         null
                                                 }
+                                                <option value={5}>Varios Métodos</option>
                                             </Input>
                                         </Col>
                                         {
