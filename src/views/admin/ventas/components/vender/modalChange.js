@@ -5,14 +5,20 @@ import productsSellContext from '../../../../../context/productsSell';
 
 const ModalChange = ({
     modal,
-    toggle
+    toggle,
+    descuentoPerc
 }) => {
+
     const { totalPrecio } = useContext(productsSellContext)
     const [abona, setAbona] = useState(0)
-    const [total, setTotal] = useState(totalPrecio)
+    const [total, setTotal] = useState(parseFloat((totalPrecio * (1 - (parseFloat(descuentoPerc) / 100)))))
+
 
     useEffect(() => {
+        setTotal(parseFloat((totalPrecio * (1 - (parseFloat(descuentoPerc) / 100)))))
+    }, [totalPrecio, descuentoPerc, modal])
 
+    useEffect(() => {
         setTimeout(() => {
             try {
                 document.getElementById("abonaCon").select()
@@ -20,7 +26,6 @@ const ModalChange = ({
 
             }
         }, 300);
-        setTotal(totalPrecio)
     }, [modal])
 
     return (
