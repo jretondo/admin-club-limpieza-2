@@ -90,7 +90,7 @@ const Ventas = ({
             },
             fiscal: factFiscBool
         }
-        if (parseInt(formaPago) === 5 && parseFloat(total) !== parseFloat(totalPrecio)) {
+        if (parseInt(formaPago) === 5 && parseFloat(total) !== parseFloat((totalPrecio - (totalPrecio * (descuentoPerc / 100))))) {
             swal("Error: Total del pago!", "Revise que el total del pago debe ser igual al total de la factura.", "error");
         } else {
             if (totalPrecio > 15795 && parseInt(clienteBool) === 0 && parseInt(factFiscBool) === 1) {
