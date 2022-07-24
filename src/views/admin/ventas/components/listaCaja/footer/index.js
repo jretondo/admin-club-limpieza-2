@@ -68,35 +68,35 @@ const FooterListVentas = ({
                 })
             }
             if (totales.length > 0) {
-                if (efectivo > 0) {
+                if (efectivo !== 0) {
                     efectivoRow = <TotalItemsVtas
                         totalId={0}
                         totalImporte={efectivo}
                         colSize={4}
                     />
                 }
-                if (mercadoPago > 0) {
+                if (mercadoPago !== 0) {
                     mercadoPagoRow = <TotalItemsVtas
                         totalId={1}
                         totalImporte={mercadoPago}
                         colSize={4}
                     />
                 }
-                if (debito > 0) {
+                if (debito !== 0) {
                     debitoRow = <TotalItemsVtas
                         totalId={2}
                         totalImporte={debito}
                         colSize={4}
                     />
                 }
-                if (credito > 0) {
+                if (credito !== 0) {
                     creditoRow = <TotalItemsVtas
                         totalId={3}
                         totalImporte={credito}
                         colSize={4}
                     />
                 }
-                if (ctacte > 0) {
+                if (ctacte !== 0) {
                     ctacteRow = <TotalItemsVtas
                         totalId={4}
                         totalImporte={ctacte}

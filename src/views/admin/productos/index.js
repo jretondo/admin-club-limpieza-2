@@ -64,6 +64,10 @@ const Productos = () => {
     const [nvaActCall, setNvaActCall] = useState(false)
     const [actividadStr, setActividadStr] = useState("")
 
+    const [busquedaBool, setBusquedaBool] = useState(false)
+    const [palabraBuscada, setPalabraBuscada] = useState("")
+    const [pagina, setPagina] = useState(1)
+
     useActividad(
         nvaActCall,
         actividadStr
@@ -317,6 +321,12 @@ const Productos = () => {
                                     setIdDetalle={setIdDetalle}
                                     setCopiarDet={setCopiarDet}
                                     setEsperar={setEsperar}
+                                    busquedaBool={busquedaBool}
+                                    setBusquedaBool={setBusquedaBool}
+                                    palabraBuscada={palabraBuscada}
+                                    setPalabraBuscada={setPalabraBuscada}
+                                    pagina={pagina}
+                                    setPagina={setPagina}
                                 />
 
                                 <Row style={

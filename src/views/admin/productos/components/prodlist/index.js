@@ -27,14 +27,17 @@ const ProdList = ({
     setSuccessAlert,
     setDetallesBool,
     setIdDetalle,
-    setCopiarDet
+    setCopiarDet,
+    busquedaBool,
+    setBusquedaBool,
+    palabraBuscada,
+    setPalabraBuscada,
+    pagina,
+    setPagina
 }) => {
 
-    const [busquedaBool, setBusquedaBool] = useState(false)
-    const [palabraBuscada, setPalabraBuscada] = useState("")
     const [plantPaginas, setPlantPaginas] = useState([])
     const [ultimaPag, setUltimaPag] = useState(0)
-    const [pagina, setPagina] = useState(1)
     const [listado, setListado] = useState([])
     const [dataState, setDataState] = useState([])
     const [esperar, setEsperar] = useState(false)
@@ -311,7 +314,7 @@ const ProdList = ({
                                                                 </Input> : null
                                                         }
                                                         <FormGroup check>
-                                                            <Input type="checkbox" id="roundTxt" checked={round} onChange={e => setRoundBool(e.target.checked)} />
+                                                            <Input type="checkbox" id="roundTxt" checked={roundBool} onChange={e => setRoundBool(e.target.checked)} />
                                                             {' '}
                                                             <Label check for="roundTxt">
                                                                 Redondear
