@@ -246,6 +246,7 @@ const ProdList = ({
                                             call={call}
                                             setCall={setCall}
                                             titulo="Buscar un Producto"
+                                            setPagina={setPagina}
                                         />
                                     </Col>
                                 </Row>

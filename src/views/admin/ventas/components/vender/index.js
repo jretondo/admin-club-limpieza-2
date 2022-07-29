@@ -71,25 +71,45 @@ const Ventas = ({
     }
 
     const generarFactura = async () => {
-        const data = {
-            dataFact: {
-                fecha: moment(new Date()).format("YYYY-MM-DD"),
-                pv_id: ptoVta.id,
-                fiscal: factFiscBool,
-                forma_pago: formaPago,
-                cond_iva: condIvaCli,
-                enviar_email: envioEmailBool,
-                cliente_email: emailCliente,
-                cliente_bool: parseInt(clienteBool),
-                cliente_tdoc: parseInt(clienteBool) === 0 ? 99 : tipoDoc,
-                cliente_ndoc: ndoc,
-                cliente_name: razSoc,
-                lista_prod: productsSellList,
-                descuentoPerc: descuentoPerc,
-                variosPagos: variosPagos
-            },
-            fiscal: factFiscBool
+        let data
+        if (parseInt(clienteBool) === 0) {
+            data = {
+                dataFact: {
+                    fecha: moment(new Date()).format("YYYY-MM-DD"),
+                    pv_id: ptoVta.id,
+                    fiscal: factFiscBool,
+                    forma_pago: formaPago,
+                    cond_iva: condIvaCli,
+                    enviar_email: envioEmailBool,
+                    cliente_email: emailCliente,
+                    lista_prod: productsSellList,
+                    descuentoPerc: descuentoPerc,
+                    variosPagos: variosPagos
+                },
+                fiscal: factFiscBool
+            }
+        } else {
+            data = {
+                dataFact: {
+                    fecha: moment(new Date()).format("YYYY-MM-DD"),
+                    pv_id: ptoVta.id,
+                    fiscal: factFiscBool,
+                    forma_pago: formaPago,
+                    cond_iva: condIvaCli,
+                    enviar_email: envioEmailBool,
+                    cliente_email: emailCliente,
+                    cliente_bool: parseInt(clienteBool),
+                    cliente_tdoc: tipoDoc,
+                    cliente_ndoc: ndoc,
+                    cliente_name: razSoc,
+                    lista_prod: productsSellList,
+                    descuentoPerc: descuentoPerc,
+                    variosPagos: variosPagos
+                },
+                fiscal: factFiscBool
+            }
         }
+
         if (parseInt(formaPago) === 5 && parseFloat(total) !== parseFloat((totalPrecio - (totalPrecio * (descuentoPerc / 100))))) {
             swal("Error: Total del pago!", "Revise que el total del pago debe ser igual al total de la factura.", "error");
         } else {
@@ -123,6 +143,9 @@ const Ventas = ({
         }
 
     }
+
+    console.log('clienteBool :>> ', clienteBool);
+    console.log('tipoDoc :>> ', tipoDoc);
 
     const facturar = async (data) => {
         setProcessing(true)
