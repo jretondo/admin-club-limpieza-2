@@ -144,9 +144,6 @@ const Ventas = ({
 
     }
 
-    console.log('clienteBool :>> ', clienteBool);
-    console.log('tipoDoc :>> ', tipoDoc);
-
     const facturar = async (data) => {
         setProcessing(true)
         await axios.post(UrlNodeServer.invoicesDir.invoices, data, {

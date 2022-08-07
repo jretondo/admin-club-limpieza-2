@@ -5,12 +5,14 @@ import React, { useEffect, useState } from 'react';
 import { DropdownItem, DropdownMenu, DropdownToggle, Spinner, UncontrolledDropdown, Button, Tooltip } from 'reactstrap';
 import { BsFileEarmarkPdfFill, BsTelegram, BsFillXCircleFill } from "react-icons/bs";
 import { FiRefreshCcw } from 'react-icons/fi';
+import { MdOutlineFreeCancellation } from 'react-icons/md';
 import axios from 'axios';
 import UrlNodeServer from '../../../../api/NodeServer';
 import swal from 'sweetalert';
 import { validateEmail } from 'Function/emailValidator';
 import FileSaver from 'file-saver';
 import ModalChangeType from './ModalChangeType';
+import ModalDevPart from './ModalDevPart';
 
 const FilaVentas = ({
     id,
@@ -21,7 +23,6 @@ const FilaVentas = ({
     actualizar
 }) => {
 
-    console.log('item :>> ', item);
     const [wait, setWait] = useState(false)
     const [comprobante, setComprobante] = useState({
         pv: "00000",
@@ -29,6 +30,7 @@ const FilaVentas = ({
     })
     const [tooltp, setTooltp] = useState(false)
     const [modal1, setModal1] = useState(false)
+    const [modal2, setModal2] = useState(false)
 
     const getFact = async (idFact, send, type) => {
         console.log('type :>> ', type);
@@ -172,9 +174,11 @@ const FilaVentas = ({
                         parseInt(item.forma_pago) === 2 ? "Débito" :
                             parseInt(item.forma_pago) === 3 ? "Crédito" :
                                 parseInt(item.forma_pago) === 4 ? "Cuenta Corriente" :
-                                    "Varios Métodos"
+                                    parseInt(item.forma_pago) === 6 ? "Cheque" :
+                                        parseInt(item.forma_pago) === 7 ? "Transferencia" :
+                                            "Varios Métodos"
                 }
-                <Button disabled={parseInt(item.id_fact_asoc) !== 0 || parseInt(item.forma_pago) === 5} style={{ borderRadius: "10%", marginInline: "10px" }} color={"info"} id={`buttonChange-${item.id}`}
+                <Button disabled={parseFloat(item.total_fact) < 0 || parseInt(item.forma_pago) === 5} style={{ borderRadius: "10%", marginInline: "10px" }} color={"info"} id={`buttonChange-${item.id}`}
                     onClick={e => cambiarFormaPago(e, item)}
                 >
                     <FiRefreshCcw />
@@ -218,6 +222,17 @@ const FilaVentas = ({
                                     href="#pablo"
                                     onClick={e => {
                                         e.preventDefault(e)
+                                        setModal2(true)
+                                    }}
+                                    disabled={(parseFloat(item.total_fact) < 0 || parseInt(item.t_fact) < 0) ? true : false}
+                                >
+                                    <MdOutlineFreeCancellation />
+                                    Devolución Parcial
+                                </DropdownItem>
+                                <DropdownItem
+                                    href="#pablo"
+                                    onClick={e => {
+                                        e.preventDefault(e)
                                         getFact(item.id, true)
                                     }}
                                 >
@@ -226,11 +241,11 @@ const FilaVentas = ({
                                 </DropdownItem>
                                 <DropdownItem
                                     href="#pablo"
-                                    disabled={parseInt(item.id_fact_asoc) !== 0 ? true : false}
                                     onClick={e => {
                                         e.preventDefault(e)
                                         anularFact(item.id)
                                     }}
+                                    disabled={(parseFloat(item.total_fact) < 0 || parseInt(item.t_fact) < 0) ? true : false}
                                 >
                                     <BsFillXCircleFill />
                                     Cancelar Factura
@@ -260,6 +275,11 @@ const FilaVentas = ({
                 item={item}
                 pagina={pagina}
                 setPagina={setPagina}
+            />
+            <ModalDevPart
+                modal={modal2}
+                toggle={() => setModal2(!modal2)}
+                idFact={item.id}
             />
         </tr>
     )
