@@ -106,6 +106,7 @@ const InvoiceHeader = ({
                 setNdoc={setNdoc}
                 setRazSoc={setRazSoc}
                 setEnvioEmailBool={setEnvioEmailBool}
+                setCondIvaCli={setCondIvaCli}
             />
             <Form>
                 <Row>

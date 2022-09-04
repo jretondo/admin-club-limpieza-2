@@ -53,7 +53,8 @@ const NdocInput = ({
                             setInvalidNdoc(false)
                             setTipoDoc(tipoCliente)
                             setNdoc(cliente.ndoc)
-                            setCondIvaCli(cliente.cond_iva)
+                            console.log('cliente :>> ', cliente);
+                            setCondIvaCli(parseInt(cliente.cond_iva))
                             setRazSoc(cliente.razsoc)
                             if (cliente.email.length > 0) {
                                 setEmailCliente(cliente.email)
@@ -109,7 +110,8 @@ const NdocInput = ({
                             setTipoDoc(tipoCliente)
                             setNdoc(cliente.ndoc)
                             setRazSoc(cliente.razsoc)
-                            setCondIvaCli(cliente.cond_iva)
+                            console.log('cliente :>> ', cliente);
+                            setCondIvaCli(parseInt(cliente.cond_iva))
                             if (cliente.email.length > 0) {
                                 setEmailCliente(cliente.email)
                                 setEnvioEmailBool(1)

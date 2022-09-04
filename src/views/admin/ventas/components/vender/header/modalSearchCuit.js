@@ -14,7 +14,8 @@ const ModalSearchCuit = ({
     setEmailCliente,
     setNdoc,
     setRazSoc,
-    setEnvioEmailBool
+    setEnvioEmailBool,
+    setCondIvaCli
 }) => {
     const [loading, setLoading] = useState(false)
     const [dataFind, setDataFind] = useState("")
@@ -57,6 +58,7 @@ const ModalSearchCuit = ({
                                         setRazSoc={setRazSoc}
                                         cuitSearchToggle={cuitSearchToggle}
                                         setEnvioEmailBool={setEnvioEmailBool}
+                                        setCondIvaCli={setCondIvaCli}
                                     />
                                 )
                             })
