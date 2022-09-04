@@ -53,6 +53,7 @@ const NdocInput = ({
                             setInvalidNdoc(false)
                             setTipoDoc(tipoCliente)
                             setNdoc(cliente.ndoc)
+                            setCondIvaCli(cliente.cond_iva)
                             setRazSoc(cliente.razsoc)
                             if (cliente.email.length > 0) {
                                 setEmailCliente(cliente.email)
@@ -61,15 +62,18 @@ const NdocInput = ({
                         } else {
                             setEmailCliente("")
                             setEnvioEmailBool(0)
+                            setCondIvaCli(0)
                         }
                     } else {
                         setEmailCliente("")
                         setEnvioEmailBool(0)
+                        setCondIvaCli(0)
                     }
                 })
                 .catch(() => {
                     setEmailCliente("")
                     setEnvioEmailBool(0)
+                    setCondIvaCli(0)
                 })
         } else {
             const esCuit = verificadorCuit(ndoc).isCuit
@@ -105,6 +109,7 @@ const NdocInput = ({
                             setTipoDoc(tipoCliente)
                             setNdoc(cliente.ndoc)
                             setRazSoc(cliente.razsoc)
+                            setCondIvaCli(cliente.cond_iva)
                             if (cliente.email.length > 0) {
                                 setEmailCliente(cliente.email)
                                 setEnvioEmailBool(1)
