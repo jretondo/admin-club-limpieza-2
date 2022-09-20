@@ -84,7 +84,8 @@ const productsDir = {
         varCost: products + "/varCost",
         changePorc: products + "/changePorc",
         codBarra: products + "/codBarra",
-        cost: products + "/cost"
+        cost: products + "/cost",
+        pdf: products + "/pdf"
     }
 }
 

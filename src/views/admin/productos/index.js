@@ -24,6 +24,7 @@ import ImagenesForm from '../../../components/subComponents/Productos/ImagenesFo
 import AlertaForm from '../../../components/subComponents/Alertas/Alerta1'
 import { UseSecureRoutes } from "Hooks/UseSecureRoutes"
 import ProdList from "./components/prodlist"
+import moment from "moment"
 
 const Productos = () => {
     const [alertar, setAlertar] = useState(false)
@@ -67,6 +68,8 @@ const Productos = () => {
     const [busquedaBool, setBusquedaBool] = useState(false)
     const [palabraBuscada, setPalabraBuscada] = useState("")
     const [pagina, setPagina] = useState(1)
+
+    const [lastUpdate, setLastUpdate] = useState("")
 
     useActividad(
         nvaActCall,
@@ -235,6 +238,7 @@ const Productos = () => {
                     setIvaCosto(gralData.iva)
                     setPrecioVta(gralData.vta_price)
                     setVtaFijaBool(gralData.vta_fija)
+                    setLastUpdate(gralData.update_time)
                     const roundConst = parseInt(gralData.round)
                     if (roundConst > 0) {
                         setRound(roundConst)
@@ -342,7 +346,8 @@ const Productos = () => {
                                                     <Col xs="9">
                                                         {
                                                             detallesBool ?
-                                                                <h3 className="mb-0">{nombreNvo}</h3> :
+                                                                <h3 className="mb-0">{nombreNvo}
+                                                                    <span style={{ fontWeight: "bold", color: "red" }}>(Última modificación: {moment(lastUpdate).format("DD/MM/YYYY h:m")}hs)</span></h3> :
                                                                 <h3 className="mb-0">Nuevo Producto</h3>
                                                         }
 
