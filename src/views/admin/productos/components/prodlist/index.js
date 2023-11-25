@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import ListadoTable from 'components/subComponents/Listados/ListadoTable';
 import Paginacion from 'components/subComponents/Paginacion/Paginacion';
 import BusquedaProdForm from 'components/subComponents/Productos/BusquedaForm';
-import { Card, CardFooter, CardHeader, Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
+import { Button, Card, CardFooter, CardHeader, Col, Form, FormGroup, Input, Label, Row } from 'reactstrap';
 import UrlNodeServer from '../../../../../api/NodeServer';
 import axios from 'axios';
 import FilaProducto from 'components/subComponents/Listados/SubComponentes/FilaProducto';
 import Spinner from 'reactstrap/lib/Spinner';
 import FileSaver from 'file-saver'
+import AdvancedSearch from '../advancedSearch';
 
 const titulos = ["Producto", "Proveedor", "Marca", "Costo s/IVA", "Costo c/IVA", "% Gan.", ""]
 
@@ -47,6 +48,11 @@ const ProdList = ({
     const [porc, setPorc] = useState("")
     const [round, setRound] = useState(false)
     const [roundBool, setRoundBool] = useState(false)
+    const [advancedSearch, setAdvancedSearch] = useState(false)
+    const [productoBuscado, setProductoBuscado] = useState("")
+    const [marcaBuscada, setMarcaBuscada] = useState("")
+    const [proveedorBuscado, setProveedorBuscado] = useState("")
+    const [fixAmount, setFixAmount] = useState(false)
 
     useEffect(() => {
         ListarProductos()
@@ -77,9 +83,17 @@ const ProdList = ({
         let data = {
             query: ""
         }
-        if (busquedaBool) {
+        if (busquedaBool && !advancedSearch) {
             data = {
                 query: palabraBuscada
+            }
+        } else if (advancedSearch) {
+            data = {
+                query: "",
+                name: productoBuscado,
+                brand: marcaBuscada,
+                provider: proveedorBuscado,
+                advanced: true
             }
         }
         await axios.get(`${UrlNodeServer.productsDir.products}/${pagina}`, {
@@ -173,18 +187,38 @@ const ProdList = ({
         let query = {
             query: ""
         }
-        if (busquedaBool) {
+
+        if (busquedaBool && !advancedSearch) {
             query = {
                 query: palabraBuscada
             }
+        } else if (advancedSearch) {
+            query = {
+                query: "",
+                name: productoBuscado,
+                brand: marcaBuscada,
+                provider: proveedorBuscado,
+                advanced: true
+            }
+        }
+        let data = {}
+        if (fixAmount) {
+            data = {
+                aumento: aumento,
+                fixAmount: true,
+                porc: porc,
+                round: round,
+                roundBool: roundBool
+            }
+        } else {
+            data = {
+                aumento: aumento,
+                porc: (porc / 100),
+                round: round,
+                roundBool: roundBool
+            }
         }
 
-        const data = {
-            aumento: aumento,
-            porc: (porc / 100),
-            round: round,
-            roundBool: roundBool
-        }
 
         await axios.post(`${UrlNodeServer.productsDir.sub.varCost}`, data, {
             params: query,
@@ -222,12 +256,23 @@ const ProdList = ({
 
     const printPDFOfProducts = async () => {
         setEsperar(true)
-        let query = ""
-        if (busquedaBool) {
-            query = `query=${palabraBuscada}`
+        let data = ""
+        if (busquedaBool && !advancedSearch) {
+            data = {
+                query: palabraBuscada
+            }
+        } else if (advancedSearch) {
+            data = {
+                query: "",
+                name: productoBuscado,
+                brand: marcaBuscada,
+                provider: proveedorBuscado,
+                advanced: true
+            }
         }
 
-        await axios.get(UrlNodeServer.productsDir.sub.pdf + "?" + query, {
+        await axios.get(UrlNodeServer.productsDir.sub.pdf, {
+            params: data,
             responseType: 'arraybuffer',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('user-token'),
@@ -244,6 +289,17 @@ const ProdList = ({
             swal("Lista de produsctos!", "Hubo un errore al querer imprimir la lista!", "error");
         }).finally(() => { setEsperar(false) })
     }
+
+    useEffect(() => {
+        if (!advancedSearch) {
+            setProductoBuscado("")
+            setMarcaBuscada("")
+            setProveedorBuscado("")
+        } else {
+            setPalabraBuscada("")
+        }
+        ListarProductos()
+    }, [advancedSearch])
 
     return (
         <Row style={
@@ -264,16 +320,45 @@ const ProdList = ({
                                         <h2 className="mb-0" style={{ textAlign: "center" }} >Lista de Productos</h2>
                                     </Col>
                                     <Col md="8" style={{ textAlign: "right" }}>
-                                        <BusquedaProdForm
-                                            busquedaBool={busquedaBool}
-                                            setPalabraBuscada={setPalabraBuscada}
-                                            palabraBuscada={palabraBuscada}
-                                            setBusquedaBool={setBusquedaBool}
-                                            call={call}
-                                            setCall={setCall}
-                                            titulo="Buscar un Producto"
-                                            setPagina={setPagina}
-                                        />
+                                        {
+                                            advancedSearch ?
+                                                <AdvancedSearch
+                                                    advancedSearch={advancedSearch}
+                                                    setAdvancedSearch={setAdvancedSearch}
+                                                    productoBuscado={productoBuscado}
+                                                    setProductoBuscado={setProductoBuscado}
+                                                    marcaBuscada={marcaBuscada}
+                                                    setMarcaBuscada={setMarcaBuscada}
+                                                    proveedorBuscado={proveedorBuscado}
+                                                    setProveedorBuscado={setProveedorBuscado}
+                                                    ListarProductos={ListarProductos}
+                                                /> :
+                                                <Row>
+                                                    <Col md="8">
+                                                        <BusquedaProdForm
+                                                            busquedaBool={busquedaBool}
+                                                            setPalabraBuscada={setPalabraBuscada}
+                                                            palabraBuscada={palabraBuscada}
+                                                            setBusquedaBool={setBusquedaBool}
+                                                            call={call}
+                                                            setCall={setCall}
+                                                            titulo="Buscar un Producto"
+                                                            setPagina={setPagina}
+                                                        />
+                                                    </Col>
+                                                    <Col md="4">
+                                                        <Button
+                                                            color="primary"
+                                                            onClick={e => {
+                                                                e.preventDefault()
+                                                                setAdvancedSearch(!advancedSearch)
+                                                            }}
+                                                        >
+                                                            Busqueda Avanzada
+                                                        </Button>
+                                                    </Col>
+                                                </Row>
+                                        }
                                     </Col>
                                 </Row>
                             </CardHeader>
@@ -325,7 +410,7 @@ const ProdList = ({
                                                             value={porc}
                                                             onChange={e => setPorc(e.target.value)}
                                                             id="porcentajeTxt"
-                                                            placeholder="Porcentaje a variar..."
+                                                            placeholder={fixAmount ? "Monto Fijo" : "Porcentaje"}
                                                             type="number"
                                                         />
                                                     </FormGroup>
@@ -345,6 +430,15 @@ const ProdList = ({
                                                             {' '}
                                                             <Label check for="roundTxt">
                                                                 Redondear
+                                                            </Label>
+                                                        </FormGroup>
+                                                    </Row>
+                                                    <Row>
+                                                        <FormGroup check>
+                                                            <Input type="checkbox" id="fixAmountCheck" checked={fixAmount} onChange={e => setFixAmount(e.target.checked)} />
+                                                            {' '}
+                                                            <Label check for="fixAmountCheck">
+                                                                Monto Fijo
                                                             </Label>
                                                         </FormGroup>
                                                     </Row>

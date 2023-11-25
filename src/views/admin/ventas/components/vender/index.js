@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import UrlNodeServer from '../../../../../api/NodeServer'
 import {
     Button,
@@ -10,6 +10,10 @@ import {
     InputGroup,
     InputGroupAddon,
     Label,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
     Row,
     Spinner,
     Table
@@ -51,6 +55,10 @@ const Ventas = ({
 
     const [modal1, setModal1] = useState(false)
 
+    const [codigoDescuento, setCodigoDescuento] = useState("")
+    const [modalCodDescuento, setModalDescuento] = useState(false)
+    const [tiempoLimite, setTiempoLimite] = useState(300)
+    const [data, setData] = useState({})
     const { totalPrecio, cancelarCompra, productsSellList } = useContext(productsSellContext)
 
     const cancelar = () => {
@@ -145,6 +153,57 @@ const Ventas = ({
     }
 
     const facturar = async (data) => {
+        setData(data)
+        if (descuentoPerc === 0) {
+            generarFacturaFinal(data)
+        } else {
+            setProcessing(true)
+            const data = {
+                total: formatMoney(totalPrecio),
+                descuentoPorcentaje: descuentoPerc,
+                descuento: formatMoney(totalPrecio - (totalPrecio * (descuentoPerc / 100))),
+                cliente: `${razSoc} (${ndoc})`
+            }
+            await axios.post(UrlNodeServer.invoicesDir.sub.codigoDescuento, data, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('user-token')
+                }
+            }).then(res => {
+                if (res.data.status === 200) {
+                    setModalDescuento(true)
+                } else {
+                    swal("Error en el código!", "Algo falló al querer generar el código.", "error");
+                }
+            }).catch(err => {
+                console.log('object :>> ', err);
+                swal("Error en el código!", "Algo falló al querer generar el código.", "error");
+            }).finally(() => { setProcessing(false) })
+        }
+    }
+
+    const verificarCodigo = async () => {
+        setProcessing(true)
+        const dataCod = {
+            codigo: codigoDescuento
+        }
+        await axios.post(UrlNodeServer.invoicesDir.sub.verificaCodigo, dataCod, {
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('user-token')
+            }
+        }).then(res => {
+            if (res.data.body.status === 200) {
+                setModalDescuento(false)
+                generarFacturaFinal(data)
+            } else {
+                swal("Error en el código!", "Código inválido o vencido!", "error");
+            }
+        }).catch(err => {
+            console.log('object :>> ', err);
+            swal("Error en el código!", "Código inválido o vencido!", "error");
+        }).finally(() => { setProcessing(false) })
+    }
+
+    const generarFacturaFinal = async (data) => {
         setProcessing(true)
         await axios.post(UrlNodeServer.invoicesDir.invoices, data, {
             responseType: 'arraybuffer',
@@ -186,6 +245,23 @@ const Ventas = ({
             }
         }).finally(() => { setProcessing(false) })
     }
+
+    useEffect(() => {
+        if (modalCodDescuento) {
+            setTiempoLimite(300)
+            const interval = setInterval(() => {
+                setTiempoLimite(tiempoLimite => tiempoLimite - 1)
+            }, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [modalCodDescuento])
+
+    useEffect(() => {
+        if (tiempoLimite <= 0) {
+            swal("Tiempo de espera superado!", "Ha tardado demasiado el administrador en responder. Intente nuevamente.", "error");
+            setModalDescuento(false)
+        }
+    }, [tiempoLimite])
 
     return (
         <Card >
@@ -272,7 +348,11 @@ const Ventas = ({
                                                 <Row>
                                                     <Col md="4" >
                                                         <InputGroup>
-                                                            <Input style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }} type="text" value={descuentoPerc} onChange={e => setDescuentoPer(e.target.value)} min={0} max={100} />
+                                                            <Input
+                                                                style={{ fontSize: "20px", fontWeight: "bold", textAlign: "right" }}
+                                                                type="text" value={descuentoPerc}
+                                                                onChange={e => setDescuentoPer(e.target.value)}
+                                                                min={0} max={100} />
                                                             <InputGroupAddon addonType="append">%</InputGroupAddon>
                                                         </InputGroup>
                                                     </Col>
@@ -320,6 +400,41 @@ const Ventas = ({
                                     </button>
                                 </Col>
                             </Row>
+                            <Modal isOpen={modalCodDescuento} toggle={() => setModalDescuento(!modalCodDescuento)}>
+                                <ModalHeader>Autorización por Descuento - Tiempo: {Math.floor(tiempoLimite / 60)}:{formatMoney(tiempoLimite % 60, 0)} </ModalHeader>
+                                <ModalBody>
+                                    <Row>
+                                        <Col md="12">
+                                            <FormGroup>
+                                                <Label>Ingrese el código del administrador para generar la factura con descuento</Label>
+                                                <Input
+                                                    value={codigoDescuento}
+                                                    onChange={e => setCodigoDescuento(e.target.value)}
+                                                />
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <Button
+                                        color="primary"
+                                        onClick={e => {
+                                            e.preventDefault()
+                                            verificarCodigo()
+                                        }}
+                                    >
+                                        Aplicar
+                                    </Button>
+                                    <Button
+                                        color="danger"
+                                        onClick={e => {
+                                            e.preventDefault()
+                                            setModalDescuento(false)
+                                        }}>
+                                        Cerrar
+                                    </Button>
+                                </ModalFooter>
+                            </Modal>
                         </>
                 }
             </CardBody>

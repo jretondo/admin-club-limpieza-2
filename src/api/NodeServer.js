@@ -5,8 +5,8 @@ let publicFiles = ""
 const local = 1
 if (process.env.NODE_ENV === "development") {
     if (local === 1) {
-        host = "http://192.168.0.11:3008/api"
-        publicFiles = "http://192.168.0.11:3008/static"
+        host = "http://localhost:3008/api"
+        publicFiles = "http://localhost:3008/static"
     } else {
         host = "https://api-test.nekoadmin.com.ar/club-limpieza/api"
         publicFiles = "https://api-test.nekoadmin.com.ar/club-limpieza/static"
@@ -134,7 +134,9 @@ const invoicesDir = {
         dummy: invoices + "/dummy",
         timeout: invoices + "/timeout",
         detFact: invoices + "/detFact",
-        notaCredPart: invoices + "/notaCredPart"
+        notaCredPart: invoices + "/notaCredPart",
+        codigoDescuento: invoices + "/codigoDescuento",
+        verificaCodigo: invoices + "/verificaCodigo",
     }
 }
 
