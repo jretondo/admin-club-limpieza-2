@@ -82,6 +82,7 @@ const productsDir = {
         marcas: products + "/getCat",
         proveedores: products + "/getGetSubCat",
         varCost: products + "/varCost",
+        updateList: products + "/updateList",
         changePorc: products + "/changePorc",
         codBarra: products + "/codBarra",
         cost: products + "/cost",

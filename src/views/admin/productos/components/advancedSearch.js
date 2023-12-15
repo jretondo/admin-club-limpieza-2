@@ -33,16 +33,16 @@ const AdvancedSearch = ({
                     <Row className="mt-1">
                         <Col md="6">
                             <Input
-                                placeholder="Marca..."
-                                value={marcaBuscada}
-                                onChange={e => setMarcaBuscada(e.target.value)}
+                                placeholder="Proveedor..."
+                                value={proveedorBuscado}
+                                onChange={e => setProveedorBuscado(e.target.value)}
                             />
                         </Col>
                         <Col md="6">
                             <Input
-                                placeholder="Proveedor..."
-                                value={proveedorBuscado}
-                                onChange={e => setProveedorBuscado(e.target.value)}
+                                placeholder="Marca..."
+                                value={marcaBuscada}
+                                onChange={e => setMarcaBuscada(e.target.value)}
                             />
                         </Col>
                     </Row>
