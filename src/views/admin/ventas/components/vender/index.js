@@ -155,7 +155,7 @@ const Ventas = ({
     const facturar = async (data) => {
         setData(data)
         const dia = moment(new Date()).format("dddd")
-        if (descuentoPerc === 0 || (dia === "Thursday" && parseInt(descuentoPerc) <= 30 && parseInt(clienteBool) === 1)) {
+        if (descuentoPerc === 0 || (dia === "Wednesday" && parseInt(descuentoPerc) <= 30 && parseInt(clienteBool) === 1)) {
             const getClient = await axios.get(`${UrlNodeServer.clientesDir.clientes}?search=${ndoc}`, {
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('user-token')
