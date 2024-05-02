@@ -16,6 +16,9 @@ if (process.env.NODE_ENV === "development") {
     publicFiles = "https://api-prod.nekoadmin.com.ar/club-limpieza/static"
 }
 
+//host = "https://nekonet.com.ar:3007/api"
+//publicFiles = "https://nekonet.com.ar:3007/static"
+
 const prodImages = publicFiles + "/images/products/"
 
 const publicFolder = {
