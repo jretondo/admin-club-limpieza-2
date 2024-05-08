@@ -151,49 +151,69 @@ const Ventas = ({
         }
 
     }
+    const enviarCodigo = () => {
+        const dia = moment(new Date()).format("dddd")
+        if (parseInt(descuentoPerc) === 1) {
+            return false
+        }
+        if (dia === "Wednesday" && parseInt(descuentoPerc) <= 10 && parseInt(clienteBool) === 0) {
+            return false
+        }
+        if (dia === "Wednesday" && parseInt(descuentoPerc) <= 30 && parseInt(clienteBool) === 1) {
+            return false
+        }
+        if (parseInt(descuentoPerc) > 1) {
+            return true
+        }
+        return false
+    }
 
     const facturar = async (data) => {
         setData(data)
-        const dia = moment(new Date()).format("dddd")
-        if (descuentoPerc === 0 || (dia === "Wednesday" && parseInt(descuentoPerc) <= 30 && parseInt(clienteBool) === 1)) {
-            const getClient = await axios.get(`${UrlNodeServer.clientesDir.clientes}?search=${ndoc}`, {
-                headers: {
-                    'Authorization': 'Bearer ' + localStorage.getItem('user-token')
-                }
-            }).then(res => {
-                if (res.data.status === 200) {
-                    return res.data.body.data[0]
-                } else {
-                    return null
-                }
-            }).catch(err => {
-                console.log('object :>> ', err);
-                return null
-            })
-            if (getClient) {
-                generarFacturaFinal(data)
-            } else {
-                setProcessing(true)
-                const data = {
-                    total: formatMoney(totalPrecio),
-                    descuentoPorcentaje: descuentoPerc,
-                    descuento: formatMoney(totalPrecio - (totalPrecio * (descuentoPerc / 100))),
-                    cliente: `${razSoc} (${ndoc})`
-                }
-                await axios.post(UrlNodeServer.invoicesDir.sub.codigoDescuento, data, {
+        const descuento = enviarCodigo()
+        if (!descuento) {
+            if (parseInt(clienteBool) === 1) {
+                const getClient = await axios.get(`${UrlNodeServer.clientesDir.clientes}?search=${ndoc}`, {
                     headers: {
                         'Authorization': 'Bearer ' + localStorage.getItem('user-token')
                     }
                 }).then(res => {
                     if (res.data.status === 200) {
-                        setModalDescuento(true)
+                        return res.data.body.data[0]
                     } else {
-                        swal("Error en el código!", "Algo falló al querer generar el código.", "error");
+                        return null
                     }
                 }).catch(err => {
                     console.log('object :>> ', err);
-                    swal("Error en el código!", "Algo falló al querer generar el código.", "error");
-                }).finally(() => { setProcessing(false) })
+                    return null
+                })
+                if (getClient) {
+                    generarFacturaFinal(data)
+                } else {
+                    setProcessing(true)
+                    const data = {
+                        total: formatMoney(totalPrecio),
+                        descuentoPorcentaje: descuentoPerc,
+                        descuento: formatMoney(totalPrecio - (totalPrecio * (descuentoPerc / 100))),
+                        cliente: `${razSoc} (${ndoc})`
+                    }
+                    await axios.post(UrlNodeServer.invoicesDir.sub.codigoDescuento, data, {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('user-token')
+                        }
+                    }).then(res => {
+                        if (res.data.status === 200) {
+                            setModalDescuento(true)
+                        } else {
+                            swal("Error en el código!", "Algo falló al querer generar el código.", "error");
+                        }
+                    }).catch(err => {
+                        console.log('object :>> ', err);
+                        swal("Error en el código!", "Algo falló al querer generar el código.", "error");
+                    }).finally(() => { setProcessing(false) })
+                }
+            } else {
+                generarFacturaFinal(data)
             }
         } else {
             setProcessing(true)
