@@ -120,10 +120,7 @@ const Ventas = ({
 
         if (parseInt(formaPago) === 5 && parseFloat(total) !== parseFloat((totalPrecio - (totalPrecio * (descuentoPerc / 100))))) {
             swal("Error: Total del pago!", "Revise que el total del pago debe ser igual al total de la factura.", "error");
-        } else {
-            if (totalPrecio > 15795 && parseInt(clienteBool) === 0 && parseInt(factFiscBool) === 1) {
-                swal("Error: Consumidor Final!", "Cuando el importe supere los $15.795,00 se tendrá que identificar el consumidor final si o si por exigencias de AFIP.", "error");
-            } else {
+        } else {           
                 if (productsSellList.length > 0) {
                     if (parseInt(clienteBool) === 1) {
                         if (parseInt(tipoDoc) === 96) {
@@ -146,8 +143,7 @@ const Ventas = ({
                     }
                 } else {
                     swal("Error en el carrito!", "No hay productos para facturar! Controlelo.", "error");
-                }
-            }
+                }            
         }
 
     }
@@ -269,8 +265,7 @@ const Ventas = ({
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('user-token'),
                 Accept: 'application/pdf',
-            },
-            timeout: 5000
+            }
         }).then(res => {
             if (parseInt(formaPago) === 0) {
                 setModal1(true)

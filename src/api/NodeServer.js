@@ -5,8 +5,8 @@ let publicFiles = ""
 const local = 1
 if (process.env.NODE_ENV === "development") {
     if (local === 1) {
-        host = "http://localhost:3008/api"
-        publicFiles = "http://localhost:3008/static"
+        host = "http://localhost:3007/api"
+        publicFiles = "http://localhost:3007/static"
     } else {
         host = "https://api-test.nekoadmin.com.ar/club-limpieza/api"
         publicFiles = "https://api-test.nekoadmin.com.ar/club-limpieza/static"
@@ -72,7 +72,8 @@ const ptosVtaDir = {
     ptosVta,
     sub: {
         details: ptosVta + "/details",
-        userPv: ptosVta + "/userPv"
+        userPv: ptosVta + "/userPv",
+        list: ptosVta + "/list",
     }
 }
 

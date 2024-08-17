@@ -25,7 +25,16 @@ const UsuariosList = ({
                 const respuesta = res.data
                 const status = parseInt(respuesta.status)
                 if (status === 200) {
-                    const ptoVtaData = respuesta.body.data
+                    const ptoVtaData = [
+                        {
+                            id: false,
+                            nombre: '',
+                            apellido: '',
+                            usuario: 'Todos'
+                        },
+                        ...respuesta.body.data, 
+                    ]    
+                    console.log('ptoVtaData :>> ', ptoVtaData);
                     setUsersList(
                         ptoVtaData.map((item, key) => {
                             if (user.id === 0) {

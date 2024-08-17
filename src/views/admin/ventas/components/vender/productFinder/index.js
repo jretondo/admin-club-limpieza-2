@@ -53,7 +53,11 @@ const ProductFinder = () => {
     useEffect(() => {
         if (!prodSearchModal) {
             setTimeout(() => {
-                document.getElementById("prodTxtFinder").select()
+                try {
+                    document.getElementById("prodTxtFinder").select()
+                } catch (error) {
+                    
+                }
             }, 600);
         }
     }, [prodSearchModal])

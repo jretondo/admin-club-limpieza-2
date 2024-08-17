@@ -16,7 +16,7 @@ const PtosVtas = ({
     }, [])
 
     const getPv = async () => {
-        await axios.get(UrlNodeServer.ptosVtaDir.sub.userPv, {
+        await axios.get(UrlNodeServer.ptosVtaDir.sub.list, {
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('user-token')
             }
