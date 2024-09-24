@@ -168,6 +168,9 @@ const Ventas = ({
         setData(data)
         const descuento = enviarCodigo()
         if (!descuento) {
+            generarFacturaFinal(data)            
+        } else {
+            /*
             if (parseInt(clienteBool) === 1) {
                 const getClient = await axios.get(`${UrlNodeServer.clientesDir.clientes}?search=${ndoc}`, {
                     headers: {
@@ -211,7 +214,7 @@ const Ventas = ({
             } else {
                 generarFacturaFinal(data)
             }
-        } else {
+            */
             setProcessing(true)
             const data = {
                 total: formatMoney(totalPrecio),

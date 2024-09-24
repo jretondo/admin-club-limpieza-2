@@ -61,7 +61,6 @@ const InvoiceHeader = ({
     }
 
     const lastInvoice = useCallback(async () => {
-        console.log('factFiscBool :>> ', factFiscBool);
         let fiscalBool = "true"
         if (parseInt(factFiscBool) === 0) {
             fiscalBool = ""

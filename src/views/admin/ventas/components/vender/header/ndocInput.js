@@ -77,13 +77,8 @@ const NdocInput = ({
                     setCondIvaCli(0)
                 })
         } else {
-            const esCuit = verificadorCuit(ndoc).isCuit
-            if (esCuit) {
-                setInvalidNdoc(false)
-                await getDataFiscalClient()
-            } else {
-                setInvalidNdoc(true)
-            }
+            setInvalidNdoc(false)
+            await getDataFiscalClient()
             await axios.get(`${UrlNodeServer.clientesDir.clientes}/${1}`, {
                 params: {
                     search: ndoc,
@@ -110,7 +105,6 @@ const NdocInput = ({
                             setTipoDoc(tipoCliente)
                             setNdoc(cliente.ndoc)
                             setRazSoc(cliente.razsoc)
-                            console.log('cliente :>> ', cliente);
                             setCondIvaCli(parseInt(cliente.cond_iva))
                             if (cliente.email.length > 0) {
                                 setEmailCliente(cliente.email)
@@ -131,11 +125,9 @@ const NdocInput = ({
                 })
         }
     }
-    const getDataFiscalClient = async () => {
-        console.log('pasa :>> ');
-        const verifCuit = await verificadorCuit(ndoc)
-        if (ptoVta.cert_file && ptoVta.key_file && verifCuit.isCuit) {
-
+    const getDataFiscalClient = async () => {      
+        
+        if (ptoVta.cert_file && ptoVta.key_file) {
             const query = `?cuit=${ndoc}&cert=${ptoVta.cert_file}&key=${ptoVta.key_file}&cuitPv=${ptoVta.cuit}`
             await axios.get(UrlNodeServer.clientesDir.sub.dataFiscal + query, {
                 headers: {
