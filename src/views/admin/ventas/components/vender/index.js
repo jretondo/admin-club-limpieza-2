@@ -79,73 +79,75 @@ const Ventas = ({
     }
 
     const generarFactura = async () => {
-        let data
-        if (parseInt(clienteBool) === 0) {
-            data = {
-                dataFact: {
-                    fecha: moment(new Date()).format("YYYY-MM-DD"),
-                    pv_id: ptoVta.id,
-                    fiscal: factFiscBool,
-                    forma_pago: formaPago,
-                    cond_iva: condIvaCli,
-                    enviar_email: envioEmailBool,
-                    cliente_email: emailCliente,
-                    lista_prod: productsSellList,
-                    descuentoPerc: descuentoPerc,
-                    variosPagos: variosPagos
-                },
-                fiscal: factFiscBool
-            }
+        if (descuentoPerc>100) {
+            swal("Error: Descuento erroneo!", "Controle el descuento, no puede ser mayor a 100", "error");
         } else {
-            data = {
-                dataFact: {
-                    fecha: moment(new Date()).format("YYYY-MM-DD"),
-                    pv_id: ptoVta.id,
-                    fiscal: factFiscBool,
-                    forma_pago: formaPago,
-                    cond_iva: condIvaCli,
-                    enviar_email: envioEmailBool,
-                    cliente_email: emailCliente,
-                    cliente_bool: parseInt(clienteBool),
-                    cliente_tdoc: tipoDoc,
-                    cliente_ndoc: ndoc,
-                    cliente_name: razSoc,
-                    lista_prod: productsSellList,
-                    descuentoPerc: descuentoPerc,
-                    variosPagos: variosPagos
-                },
-                fiscal: factFiscBool
-            }
-        }
-
-        if (parseInt(formaPago) === 5 && parseFloat(total) !== parseFloat((totalPrecio - (totalPrecio * (descuentoPerc / 100))))) {
-            swal("Error: Total del pago!", "Revise que el total del pago debe ser igual al total de la factura.", "error");
-        } else {           
-                if (productsSellList.length > 0) {
-                    if (parseInt(clienteBool) === 1) {
-                        if (parseInt(tipoDoc) === 96) {
-                            const largo = ndoc.length
-                            if (largo > 8 || largo < 7) {
-                                swal("Error en el DNI!", "El DNI que trata de cargar es inválido! Reviselo.", "error");
+            let data
+            if (parseInt(clienteBool) === 0) {
+                data = {
+                    dataFact: {
+                        fecha: moment(new Date()).format("YYYY-MM-DD"),
+                        pv_id: ptoVta.id,
+                        fiscal: factFiscBool,
+                        forma_pago: formaPago,
+                        cond_iva: condIvaCli,
+                        enviar_email: envioEmailBool,
+                        cliente_email: emailCliente,
+                        lista_prod: productsSellList,
+                        descuentoPerc: descuentoPerc,
+                        variosPagos: variosPagos
+                    },
+                    fiscal: factFiscBool
+                }
+            } else {
+                data = {
+                    dataFact: {
+                        fecha: moment(new Date()).format("YYYY-MM-DD"),
+                        pv_id: ptoVta.id,
+                        fiscal: factFiscBool,
+                        forma_pago: formaPago,
+                        cond_iva: condIvaCli,
+                        enviar_email: envioEmailBool,
+                        cliente_email: emailCliente,
+                        cliente_bool: parseInt(clienteBool),
+                        cliente_tdoc: tipoDoc,
+                        cliente_ndoc: ndoc,
+                        cliente_name: razSoc,
+                        lista_prod: productsSellList,
+                        descuentoPerc: descuentoPerc,
+                        variosPagos: variosPagos
+                    },
+                    fiscal: factFiscBool
+                }
+            }    
+            if (parseInt(formaPago) === 5 && parseFloat(total) !== parseFloat((totalPrecio - (totalPrecio * (descuentoPerc / 100))))) {
+                swal("Error: Total del pago!", "Revise que el total del pago debe ser igual al total de la factura.", "error");
+            } else {           
+                    if (productsSellList.length > 0) {
+                        if (parseInt(clienteBool) === 1) {
+                            if (parseInt(tipoDoc) === 96) {
+                                const largo = ndoc.length
+                                if (largo > 8 || largo < 7) {
+                                    swal("Error en el DNI!", "El DNI que trata de cargar es inválido! Reviselo.", "error");
+                                } else {
+                                    facturar(data)
+                                }
                             } else {
-                                facturar(data)
+                                const esCuit = verificadorCuit(ndoc).isCuit
+                                if (esCuit) {
+                                    facturar(data)
+                                } else {
+                                    swal("Error en el CUIT!", "El CUIT que trata de cargar es inválido! Reviselo.", "error");
+                                }
                             }
                         } else {
-                            const esCuit = verificadorCuit(ndoc).isCuit
-                            if (esCuit) {
-                                facturar(data)
-                            } else {
-                                swal("Error en el CUIT!", "El CUIT que trata de cargar es inválido! Reviselo.", "error");
-                            }
+                            facturar(data)
                         }
                     } else {
-                        facturar(data)
-                    }
-                } else {
-                    swal("Error en el carrito!", "No hay productos para facturar! Controlelo.", "error");
-                }            
-        }
-
+                        swal("Error en el carrito!", "No hay productos para facturar! Controlelo.", "error");
+                    }            
+            }
+        }     
     }
     const enviarCodigo = () => {
         const dia = moment(new Date()).format("dddd")
