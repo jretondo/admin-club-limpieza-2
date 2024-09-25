@@ -16,6 +16,8 @@ if (process.env.NODE_ENV === "development") {
     publicFiles = "https://api-prod.nekoadmin.com.ar/club-limpieza/static"
 }
 
+ host = "https://api-prod.nekoadmin.com.ar/club-limpieza/api"
+    publicFiles = "https://api-prod.nekoadmin.com.ar/club-limpieza/static"
 
 const prodImages = publicFiles + "/images/products/"
 

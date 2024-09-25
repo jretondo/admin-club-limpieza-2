@@ -95,7 +95,8 @@ const Ventas = ({
                         cliente_email: emailCliente,
                         lista_prod: productsSellList,
                         descuentoPerc: descuentoPerc,
-                        variosPagos: variosPagos
+                        variosPagos: variosPagos,
+                        t_fact: parseInt(tfact)
                     },
                     fiscal: factFiscBool
                 }
@@ -115,7 +116,8 @@ const Ventas = ({
                         cliente_name: razSoc,
                         lista_prod: productsSellList,
                         descuentoPerc: descuentoPerc,
-                        variosPagos: variosPagos
+                        variosPagos: variosPagos,
+                        t_fact: parseInt(tfact)
                     },
                     fiscal: factFiscBool
                 }
