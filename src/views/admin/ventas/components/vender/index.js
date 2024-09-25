@@ -324,6 +324,24 @@ const Ventas = ({
         }
     }, [tiempoLimite])
 
+    useEffect(() => {
+        if (parseInt(factFiscBool) === 1) {
+               if (ptoVta.cond_iva === 0) {
+                setTfact(0)
+               } else if (ptoVta.cond_iva === 1) {
+                   if (parseInt(clienteBool) === 1) { 
+                    setTfact(1)
+                   } else {
+                    setTfact(6)
+                   }               
+               }else {
+                setTfact(11)
+               }
+        } else {
+            setTfact(0)
+        }
+    }, [factFiscBool, clienteBool, ptoVta.cond_iva])
+    
     return (
         <Card >
             <ModalChange

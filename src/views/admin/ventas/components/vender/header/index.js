@@ -152,10 +152,12 @@ const InvoiceHeader = ({
                                                         ptoVta.cond_iva === 0 ?
                                                             <option value={0}>X</option> :
                                                             ptoVta.cond_iva === 1 ?
+                                                                parseInt(clienteBool) === 1 ?
                                                                 <>
                                                                     <option value={1}>A</option>
                                                                     <option value={6}>B</option>
-                                                                </> :
+                                                                    </> :
+                                                                     <option value={6}>B</option>:
                                                                 <option value={11}>C</option> :
                                                         <option value={0}>X</option>
                                                 }
