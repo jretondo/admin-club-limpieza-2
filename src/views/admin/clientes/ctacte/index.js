@@ -8,7 +8,7 @@ import FilaCtaCte from 'components/subComponents/Listados/SubComponentes/FilaCta
 import formatMoney from 'Function/NumberFormat';
 import ModalCobroCtaCte from './modalCobro';
 
-const titulos = ["Fecha", "Detalle", "Factura", "Importe"]
+const titulos = ["Fecha", "Detalle", "Factura", "Importe", ""]
 const CtaCteListClientMod = ({
     idCliente,
     nombreCliente,
@@ -68,6 +68,7 @@ const CtaCteListClientMod = ({
                                         key={key}
                                         id={key}
                                         item={item}
+                                        actualizar={() => setActualizar(!actualizar)}
                                     />
                                 )
                             })

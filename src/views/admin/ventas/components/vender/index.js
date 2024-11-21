@@ -135,12 +135,7 @@ const Ventas = ({
                                     facturar(data)
                                 }
                             } else {
-                                const esCuit = verificadorCuit(ndoc).isCuit
-                                if (esCuit) {
-                                    facturar(data)
-                                } else {
-                                    swal("Error en el CUIT!", "El CUIT que trata de cargar es inválido! Reviselo.", "error");
-                                }
+                                facturar(data)
                             }
                         } else {
                             facturar(data)
@@ -160,6 +155,12 @@ const Ventas = ({
             return false
         }
         if (dia === "Wednesday" && parseInt(descuentoPerc) <= 30 && parseInt(clienteBool) === 1) {
+            return false
+        }
+        if (parseInt(descuentoPerc) <= 10 && parseInt(clienteBool) === 0 && parseInt(formaPago) === 0) {
+            return false
+        }
+        if (parseInt(descuentoPerc) <= 30 && parseInt(clienteBool) === 1 && parseInt(formaPago) === 0) {
             return false
         }
         if (parseInt(descuentoPerc) > 1) {

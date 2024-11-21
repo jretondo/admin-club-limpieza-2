@@ -34,6 +34,7 @@ const Login = ({ setColorAlert, setMsgAlert, setMsgAlertStrong, setAlertToggle }
     localStorage.removeItem("loginInfo")
     localStorage.removeItem("Nombre")
     localStorage.removeItem("Apellido")
+    localStorage.removeItem("user-token")
     if (!isLog) {
       const emailGuardado = localStorage.getItem("savedEmail")
       if (emailGuardado) {
@@ -75,6 +76,7 @@ const Login = ({ setColorAlert, setMsgAlert, setMsgAlertStrong, setAlertToggle }
           const userData = res.data.body.userData
           localStorage.setItem("Nombre", userData.nombre)
           localStorage.setItem("Apellido", userData.apellido)
+          localStorage.setItem("loginInfo", JSON.stringify(userData))
           if (provisory) {
             if (rememberCred) {
               localStorage.setItem("savedEmail", user)

@@ -9,9 +9,14 @@ import FileSaver from 'file-saver';
 
 const FilaCtaCte = ({
     id,
-    item
+    item,
+    actualizar
 }) => {
+    const logInfo = JSON.parse(localStorage.getItem("loginInfo"))
+    const pvId = logInfo.pv
+    console.log('pvId :>> ', pvId);
     const [wait, setWait] = useState(false)
+
     const getFact = async (idFact, importe) => {
         let query = ""
         let urlGet = UrlNodeServer.invoicesDir.sub.factDataPDF
@@ -42,6 +47,39 @@ const FilaCtaCte = ({
             })
     }
 
+    const deletePayment = async (idFact) => {
+        await swal({
+            title: "¿Está seguro?",
+            text: "Una vez eliminado, no podrá recuperar este pago!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then(async (willDelete) => {
+                if (willDelete) {
+                    setWait(true)
+                    await axios.delete(UrlNodeServer.clientesDir.sub.payments + "/" + idFact, {
+                        headers: {
+                            'Authorization': 'Bearer ' + localStorage.getItem('user-token')
+                        }
+                    })
+                        .then(res => {
+                            if (res.data.status === 200) {
+                                swal("Pago eliminado", "El pago fue eliminado con éxito", "success");
+                            } else {
+                                swal("Error!", "Algo falló al querer eliminar el pago", "error");
+                            }
+                        }).catch(err => {
+                            console.log('object :>> ', err);
+                            swal("Error!", "Algo falló al querer eliminar el pago", "error");
+                        }).finally(() => {
+                            setWait(false)
+                            actualizar()
+                        })
+                }
+            });        
+    }
+
     return (
         <tr key={id}>
             <td style={{ textAlign: "center" }}>
@@ -67,6 +105,23 @@ const FilaCtaCte = ({
                 <span style={parseFloat(item.importe) > 0 ? { marginRight: "20px", fontSize: "16px", color: "green", fontWeight: "bold" } : { marginRight: "20px", fontSize: "16px", color: "red", fontWeight: "bold" }}>
                     $ {formatMoney(item.importe)}
                 </span>
+            </td>
+            <td style={{ textAlign: "right" }}>
+                {
+                    item.detalle === "Recibo de Pago" && pvId === null ?                    
+                        wait ?
+                            <Spinner color={"danger"} />
+                            :
+                        <Button onClick={e => {
+                            e.preventDefault()
+                            deletePayment(item.id_factura)
+                        }
+                        } color={"danger"}>
+                            X
+                        </Button>
+                        :
+                        <></>
+               }
             </td>
         </tr>
     )

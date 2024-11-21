@@ -16,7 +16,6 @@ if (process.env.NODE_ENV === "development") {
     publicFiles = "https://api-prod.nekoadmin.com.ar/club-limpieza/static"
 }
 
-
 const prodImages = publicFiles + "/images/products/"
 
 const publicFolder = {
@@ -140,6 +139,7 @@ const invoicesDir = {
         notaCredPart: invoices + "/notaCredPart",
         codigoDescuento: invoices + "/codigoDescuento",
         verificaCodigo: invoices + "/verificaCodigo",
+        resetTokenAfip: invoices + "/resetTokenAfip",
     }
 }
 

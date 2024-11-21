@@ -44,7 +44,6 @@ const ModalCobroCtaCte = ({
                             'Authorization': 'Bearer ' + localStorage.getItem('user-token'),
                             Accept: 'application/pdf',
                         },
-                        timeout: 5000
                     }).then(res => {
                         let headerLine = res.headers['content-disposition'];
                         const largo = parseInt(headerLine.length)
