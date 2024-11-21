@@ -122,7 +122,7 @@ const Ventas = ({
                     fiscal: factFiscBool
                 }
             }    
-            if (parseInt(formaPago) === 5 && parseFloat(total) !== parseFloat((totalPrecio - (totalPrecio * (descuentoPerc / 100))))) {
+            if (parseInt(formaPago) === 5 && parseFloat(total).toFixed(2) !== (parseFloat((totalPrecio - (totalPrecio * (descuentoPerc / 100))))).toFixed(2)) {
                 swal("Error: Total del pago!", "Revise que el total del pago debe ser igual al total de la factura.", "error");
             } else {           
                     if (productsSellList.length > 0) {
