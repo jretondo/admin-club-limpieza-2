@@ -48,6 +48,7 @@ const ModalPago = ({
                                             setTipoTxt(e.target[e.target.selectedIndex].text)
                                         }} >
                                             <option value={0}>Efectivo</option>
+                                                <option value={7}>Transferencia</option>
                                             {
                                                 parseInt(factFiscBool) === 1 ?
                                                     <>  <option value={1}>Mercado Pago</option>

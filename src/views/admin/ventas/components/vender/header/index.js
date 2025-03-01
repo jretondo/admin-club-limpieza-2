@@ -245,6 +245,7 @@ const InvoiceHeader = ({
                                         <Col md={parseInt(formaPago) === 0 ? 8 : 12}>
                                             <Input type="select" value={formaPago} id="factFiscTxt" onChange={e => setFormaPago(e.target.value)} >
                                                 <option value={0}>Efectivo</option>
+                                                <option value={7}>Transferencia</option>
                                                 {
                                                     parseInt(factFiscBool) === 1 ?
                                                         <>  <option value={1}>Mercado Pago</option>

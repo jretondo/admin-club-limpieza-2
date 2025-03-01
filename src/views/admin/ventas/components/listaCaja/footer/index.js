@@ -19,6 +19,8 @@ const FooterListVentas = ({
             let credito = 0
             let ctacteRow = <></>
             let ctacte = 0
+            let transferenciasRow = <></>
+            let transferencias = 0
             const totales = listaCaja.totales
             const totales2 = listaCaja.totales2
             if (totales2.length > 0) {
@@ -38,6 +40,9 @@ const FooterListVentas = ({
                             break;
                         case 4:
                             ctacte = ctacte + parseFloat(item.SUMA)
+                            break;
+                        case 7:
+                            transferencias = transferencias + parseFloat(item.SUMA)
                             break;
                         default:
                             break;
@@ -61,6 +66,9 @@ const FooterListVentas = ({
                             break;
                         case 4:
                             ctacte = ctacte + parseFloat(item.SUMA)
+                            break;
+                        case 7:
+                            transferencias = transferencias + parseFloat(item.SUMA)
                             break;
                         default:
                             break;
@@ -103,12 +111,20 @@ const FooterListVentas = ({
                         colSize={4}
                     />
                 }
+                if (transferencias !== 0) {
+                    transferenciasRow = <TotalItemsVtas
+                        totalId={7}
+                        totalImporte={transferencias}
+                        colSize={4}
+                    />
+                }
                 setTotalesPlant(<>
                     {efectivoRow}
                     {mercadoPagoRow}
                     {debitoRow}
                     {creditoRow}
                     {ctacteRow}
+                    {transferenciasRow}
                 </>)
             } else {
                 setTotalesPlant(

@@ -108,6 +108,7 @@ const ModalCobroCtaCte = ({
                                         <Label for="factFiscTxt">Forma de Pago</Label>
                                         <Input type="select" value={formaPago} id="factFiscTxt" onChange={e => setFormaPago(e.target.value)} >
                                             <option value={0}>Efectivo</option>
+                                                <option value={7}>Transferencia</option>
                                             <option value={1}>Mercado Pago</option>
                                             <option value={2}>Débito</option>
                                             <option value={3}>Crédito</option>
