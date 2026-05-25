@@ -1,13 +1,46 @@
 import formatMoney from 'Function/NumberFormat';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import productSellContext from '../../../../context/productsSell';
 
 const FilaProdSell = ({
     id,
     item
 }) => {
+    const [updateDiscount, setUpdateDiscount] = useState(false)
+    const [newDiscount, setNewDiscount] = useState(item.descuento_porcentaje || 0)
 
-    const { RemoveProduct } = useContext(productSellContext)
+    const { RemoveProduct, aplicarDescuento } = useContext(productSellContext)
+
+    const actChangeDiscount = () => {
+        setUpdateDiscount(true)
+        setTimeout(() => {
+            const input = document.getElementById(`inpDiscountText-${item.key}`)
+            if (input) {
+                input.focus()
+                input.select()
+            }
+        }, 300)
+    }
+
+    const saveDiscount = () => {
+        const discount = parseFloat(newDiscount)
+        if (isNaN(discount)) {
+            aplicarDescuento(item.key, 0)
+            setNewDiscount(0)
+            setUpdateDiscount(false)
+            return
+        }
+        if (discount < 0 || discount > 100) {
+            setUpdateDiscount(false)
+            setNewDiscount(item.descuento_porcentaje || 0)
+            return
+        }
+        aplicarDescuento(item.key, discount)
+        setUpdateDiscount(false)
+    }
+
+    const descuentoPorcentaje = parseFloat(item.descuento_porcentaje) || 0
+    const precioConDescuento = item.vta_price * (1 - (descuentoPorcentaje / 100))
 
     return (
         <tr key={id}>
@@ -18,16 +51,40 @@ const FilaProdSell = ({
                 {item.cant_prod}
             </td>
             <td style={{ textAlign: "center" }}>
-                $ {formatMoney(item.vta_price)}
+                $ {formatMoney(precioConDescuento)}
+            </td>
+            <td style={{ textAlign: "center" }} onDoubleClick={() => actChangeDiscount()}>
+                {updateDiscount ? (
+                    <input
+                        type="number"
+                        min={0}
+                        max={100}
+                        id={`inpDiscountText-${item.key}`}
+                        value={newDiscount}
+                        onChange={e => setNewDiscount(e.target.value)}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') {
+                                saveDiscount()
+                            }
+                            if (e.key === 'Escape') {
+                                setNewDiscount(item.descuento_porcentaje || 0)
+                                setUpdateDiscount(false)
+                            }
+                        }}
+                        onBlur={() => saveDiscount()}
+                    />
+                ) : (
+                    descuentoPorcentaje
+                )}
             </td>
             <td style={{ textAlign: "center" }}>
-                $ {formatMoney(item.vta_price / (1 + (item.iva / 100)) * item.cant_prod)}
+                $ {formatMoney(precioConDescuento / (1 + (item.iva / 100)) * item.cant_prod)}
             </td>
             <td style={{ textAlign: "center" }}>
                 {item.iva}%
             </td>
             <td style={{ textAlign: "center" }}>
-                $ {formatMoney(item.vta_price * item.cant_prod)}
+                $ {formatMoney(precioConDescuento * item.cant_prod)}
             </td>
             <td className="text-right">
                 <button

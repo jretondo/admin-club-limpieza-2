@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Col, Row } from 'reactstrap';
 import productsSellContext from '../../../../../../context/productsSell';
 
-const titulos = ["Producto", "Cant.", "$/un.", "$ s/IVA", "%IVA", "$ Final", ""]
+const titulos = ["Producto", "Cant.", "$/un.", "Desc. (%)", "$ s/IVA", "%IVA", "$ Final", ""]
 
 const ProdListSell = () => {
     const [listProdVenta, setListProdVenta] = useState(<tr><td>No hay productos cargados aún</td></tr>)
@@ -18,7 +18,7 @@ const ProdListSell = () => {
             let total = 0
             setListProdVenta(
                 lista.map((item, key) => {
-                    total = total + (item.vta_price * item.cant_prod)
+                    total = total + (item.vta_price * (1 - ((parseFloat(item.descuento_porcentaje) || 0) / 100)) * item.cant_prod)
                     if (key === lista.length - 1) {
                         setTotalPrecio(total)
                     }
