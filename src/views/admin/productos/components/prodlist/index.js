@@ -89,22 +89,7 @@ const ProdList = ({
 
     const ListarProductos = async () => {
         setEsperar(true)
-        let data = {
-            query: ""
-        }
-        if (busquedaBool && !advancedSearch) {
-            data = {
-                query: palabraBuscada
-            }
-        } else if (advancedSearch) {
-            data = {
-                query: "",
-                name: productoBuscado,
-                brand: marcaBuscada,
-                provider: proveedorBuscado,
-                advanced: true
-            }
-        }
+        let data = getProductFilters()
         await axios.get(`${UrlNodeServer.productsDir.products}/${pagina}`, {
             params: data,
             headers: {
@@ -189,6 +174,26 @@ const ProdList = ({
                 )
                 setUltimaPag(1)
             })
+    }
+
+    const getProductFilters = () => {
+        if (busquedaBool && !advancedSearch) {
+            return {
+                query: palabraBuscada
+            }
+        } else if (advancedSearch) {
+            return {
+                query: "",
+                name: productoBuscado,
+                brand: marcaBuscada,
+                provider: proveedorBuscado,
+                advanced: true
+            }
+        }
+
+        return {
+            query: ""
+        }
     }
 
     const VariacionCosto = async () => {
@@ -325,20 +330,7 @@ const ProdList = ({
 
     const printPDFOfProducts = async () => {
         setEsperar(true)
-        let data = ""
-        if (busquedaBool && !advancedSearch) {
-            data = {
-                query: palabraBuscada
-            }
-        } else if (advancedSearch) {
-            data = {
-                query: "",
-                name: productoBuscado,
-                brand: marcaBuscada,
-                provider: proveedorBuscado,
-                advanced: true
-            }
-        }
+        let data = getProductFilters()
 
         await axios.get(UrlNodeServer.productsDir.sub.pdf, {
             params: data,
@@ -356,6 +348,35 @@ const ProdList = ({
             swal("Lista de produsctos!", "La lista ha sido impresa con éxito!", "success");
         }).catch((err) => {
             swal("Lista de produsctos!", "Hubo un errore al querer imprimir la lista!", "error");
+        }).finally(() => { setEsperar(false) })
+    }
+
+    const exportExcelOfProducts = async () => {
+        setEsperar(true)
+        let data = getProductFilters()
+
+        await axios.get(UrlNodeServer.productsDir.sub.excel, {
+            params: data,
+            responseType: 'arraybuffer',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('user-token'),
+                Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            }
+        }).then(res => {
+            let headerLine = res.headers['content-disposition'];
+            let filename = "catalogo-productos.xlsx";
+            if (headerLine) {
+                const largo = parseInt(headerLine.length)
+                filename = headerLine.substring(21, largo);
+            }
+            var blob = new Blob(
+                [res.data],
+                { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }
+            );
+            FileSaver.saveAs(blob, filename);
+            swal("Lista de productos!", "El reporte Excel ha sido generado con éxito!", "success");
+        }).catch((err) => {
+            swal("Lista de productos!", "Hubo un error al querer generar el reporte Excel!", "error");
         }).finally(() => { setEsperar(false) })
     }
 
@@ -658,7 +679,7 @@ const ProdList = ({
                                                     </Row>
                                                 </Form>
                                                 : <Row>
-                                                    <Col md="3" style={{ marginTop: "20px", textAlign: "center" }}>
+                                                    <Col md="2" style={{ marginTop: "20px", textAlign: "center" }}>
                                                         <button
                                                             className="btn btn-danger"
                                                             style={nvaOffer ? { display: "none", width: "160px", margin: "auto" } : { display: "block", width: "160px", margin: "auto" }}
@@ -670,7 +691,19 @@ const ProdList = ({
                                                             Imprimir PDF
                                                         </button>
                                                     </Col>
-                                                    <Col md="3" style={{ marginTop: "20px", textAlign: "center" }}>
+                                                    <Col md="2" style={{ marginTop: "20px", textAlign: "center" }}>
+                                                        <button
+                                                            className="btn btn-success"
+                                                            style={nvaOffer ? { display: "none", width: "160px", margin: "auto" } : { display: "block", width: "160px", margin: "auto" }}
+                                                            onClick={e => {
+                                                                e.preventDefault();
+                                                                exportExcelOfProducts()
+                                                            }}
+                                                        >
+                                                            Exportar Excel
+                                                        </button>
+                                                    </Col>
+                                                    <Col md="2" style={{ marginTop: "20px", textAlign: "center" }}>
                                                         <button
                                                             className="btn btn-primary"
                                                             style={nvaOffer ? { display: "none", width: "160px", margin: "auto" } : { display: "block", width: "160px", margin: "auto" }}
@@ -683,7 +716,7 @@ const ProdList = ({
                                                             Nuevo Producto
                                                         </button>
                                                     </Col>
-                                                    <Col md="3" style={{ marginTop: "20px", textAlign: "center" }}>
+                                                    <Col md="2" style={{ marginTop: "20px", textAlign: "center" }}>
                                                         <button
                                                             className="btn btn-primary"
                                                             style={nvaOffer ? { display: "none", width: "160px", margin: "auto" } : { display: "block", width: "160px", margin: "auto" }}
@@ -694,7 +727,7 @@ const ProdList = ({
                                                             Variar Costos
                                                         </button>
                                                     </Col>
-                                                    <Col md="3" style={{ marginTop: "20px", textAlign: "center" }}>
+                                                    <Col md="2" style={{ marginTop: "20px", textAlign: "center" }}>
                                                         <button
                                                             className="btn btn-warning"
                                                             style={nvaOffer ? { display: "none", width: "160px", margin: "auto" } : { display: "block", width: "160px", margin: "auto" }}
